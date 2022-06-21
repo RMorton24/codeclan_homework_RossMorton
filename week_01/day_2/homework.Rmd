@@ -1,0 +1,138 @@
+---
+title: "Homework - Day 2 - 21/06/2022"
+output:
+  html_document:
+    df_print: paged
+---
+
+# Import data set
+```{r}
+library(CodeClanData)
+library(tidyverse)
+```
+
+Data being looked at is drinks_content
+# Question 1 - 
+```{r}
+# Number of rows
+number_rows <- nrow(drinks_content)
+number_cols <- ncol(drinks_content)
+
+glimpse(drinks_content)
+
+# Has 242 rows and 18 columns
+# Beverage columns 1 to 3) are as characters as are vit A, vit c, calcium
+# iron and caffeine
+```
+
+# Question 2
+
+```{r}
+drink_col <- c("Beverage_category","Beverage", "Beverage_prep",
+               "Calories")
+
+drink_cal_dat <- select(drinks_content, all_of(drink_col))
+
+# Do not see any NA values in data? Only values of 0- no change to drink_cal_dat
+remove_na <- drop_na(drink_cal_dat, Calories)
+
+# Remove the 4 variable with 0
+remove_Zero <- filter(drink_cal_dat, Calories != 0)
+
+# Question 3
+mutate(drink_cal_dat,
+       calorie_diff = Calories - 135)
+
+```
+
+
+```{r}
+#Question 4
+drink_cat <- group_by(drink_cal_dat, Beverage_category)
+
+cat_mean_summary <- summarise(drink_cat,
+                              mean_calories = mean(Calories, na.rm = TRUE))
+
+arrange(cat_mean_summary, desc(mean_calories))
+
+# Highest Calories:
+# 1. Smoothies = 282
+# 2. Frappuccino Blended Coffee = 277
+# 3. Signature Espressor Drinks = 250
+```
+
+
+```{r}
+# Question  4 alternative
+drink_col <- c("Beverage_category","Beverage", "Beverage_prep",
+               "Calories")
+
+drink_cal_dat <- select(drinks_content, all_of(drink_col))
+
+drink_cal_dat %>%
+  group_by(Beverage_category) %>% 
+  summarise(mean_calories = mean(Calories, na.rm = TRUE)) %>% 
+  arrange(desc(mean_calories))
+
+```
+```{r}
+# Question  5
+drink_col <- c("Beverage_category","Beverage", "Beverage_prep",
+               "Calories")
+drink_cal_dat <- select(drinks_content, all_of(drink_col))
+
+drink_cal_dat %>%
+  group_by(Beverage_prep) %>% 
+  summarise(mean_calories = mean(Calories, na.rm = TRUE)) %>% 
+  arrange(desc(mean_calories))
+
+```
+
+
+```{r}
+# Question 6
+drink_col <- c("Beverage_category","Beverage", "Beverage_prep",
+               "Calories")
+drink_cal_dat <- select(drinks_content, all_of(drink_col))
+
+average_Calorie <- mean(pull(drink_cal_dat, Calories))
+
+filter(drink_cal_dat, Calories < average_Calorie) %>% 
+  arrange(desc(Calories))
+```
+
+
+```{r}
+filter(drink_cal_dat, Beverage_category == "Coffee") %>% 
+  arrange(Calories)
+# If using just brewed coffee then "short"
+```
+
+
+
+```{r}
+# Question 7 (all coffee???)
+all_coffee_drinks <- filter(drink_cal_dat,
+       grepl("Coffee",Beverage_category) == TRUE |
+         grepl("Coffee", Beverage) == TRUE)
+
+all_coffee_drinks %>% 
+  arrange(Calories)
+
+# Lowest calories for anything containing coffee
+# Coffee - Brewed coffee  - (short, tall, grande, venti)
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
