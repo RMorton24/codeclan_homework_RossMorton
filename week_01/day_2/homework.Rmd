@@ -132,7 +132,8 @@ all_coffee_drinks <- filter(drink_cal_dat,
          grepl("Coffee", Beverage) == TRUE)
 
 all_coffee_drinks %>% 
-  arrange(Calories)
+  arrange(Calories) %>% 
+  head(3)
 
 # Lowest calories for anything containing coffee
 # Coffee - Brewed coffee  - (short, tall, grande, venti)
