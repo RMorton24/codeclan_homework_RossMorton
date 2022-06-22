@@ -86,11 +86,21 @@ drink_col <- c("Beverage_category","Beverage", "Beverage_prep",
                "Calories")
 drink_cal_dat <- select(drinks_content, all_of(drink_col))
 
-drink_cal_dat %>%
+mean_bev_cal <- drink_cal_dat %>%
   group_by(Beverage_prep) %>% 
   summarise(mean_calories = mean(Calories, na.rm = TRUE)) %>% 
   arrange(desc(mean_calories))
 
+mean_bev_cal
+# MOst calories
+# 1. Whole milk = 283.8
+# 2. Ventti Nonfat Milk = 260
+# 3. 2% Milk = 218
+
+# Least Calories
+# 1. Solo = 5
+# 2. Doppio = 10
+# 3. Short = 37
 ```
 
 
@@ -102,8 +112,8 @@ drink_cal_dat <- select(drinks_content, all_of(drink_col))
 
 average_Calorie <- mean(pull(drink_cal_dat, Calories))
 
-filter(drink_cal_dat, Calories < average_Calorie) %>% 
-  arrange(desc(Calories))
+filter(mean_bev_cal, mean_calories >= average_Calorie) %>% 
+  arrange(desc(mean_calories))
 ```
 
 
