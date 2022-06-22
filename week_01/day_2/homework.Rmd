@@ -59,6 +59,11 @@ arrange(cat_mean_summary, desc(mean_calories))
 # 1. Smoothies = 282
 # 2. Frappuccino Blended Coffee = 277
 # 3. Signature Espressor Drinks = 250
+
+# Least calories:
+# 1. Coffee = 4.25
+# 2. Shaken iced beverages = 114
+# 3. Classic Espresso Drinks = 140
 ```
 
 
