@@ -32,7 +32,7 @@ movies_selected <- movies_raw_data %>%
 movies_selected %>% 
   summarise(across(runtime:budget,is.na
                )) %>% 
-  summarise(across(is.logical, sum, .names = "missing_values_in_{.col}"))
+  summarise(across(everything(), sum, .names = "missing_values_in_{.col}"))
 
 # Looking at each individual column
 movies_selected %>% 
@@ -124,7 +124,7 @@ movies_raw_data %>%
                    is.na
                   )
             ) %>%
-  summarise(across(is.logical, sum, .names = "missing_values_in_{col}"))
+  summarise(across(everything(), sum, .names = "missing_values_in_{col}"))
 
 
 movies_raw_data %>% 
@@ -133,7 +133,7 @@ movies_raw_data %>%
                    is.na
                   )
             ) %>%
-  summarise(across(is.logical, sum, .names = "missing_values_in_{col}"))
+  summarise(across(everything(), sum, .names = "missing_values_in_{col}"))
             
 ```
 
