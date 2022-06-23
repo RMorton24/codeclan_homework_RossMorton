@@ -1,6 +1,8 @@
 ---
 title: "Homework day 3"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 # Import packages
