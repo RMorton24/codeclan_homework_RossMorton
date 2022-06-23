@@ -19,32 +19,32 @@ movies_raw_data <- read_csv("data/movies.csv")
 Could rename some of the functions as they could be confusing.
 There are two title columns
 Some data sets have NA values. 
-_Budget, runtime and revenue_ fields have 0- is this real or method of missing data?
+_Budget, runtime and revenue_ fields have 0- is this real or method of missing 
+data?
 
 
 ## Question 2
 ```{r}
-#Question 2
-movies_selected <- movies_raw_data %>% 
+# Question 2
+movies_selected <- movies_raw_data %>%
   select(title, runtime, budget)
 ```
 ## Question 3
 ```{r}
-# Provides a summary table whether 
-movies_selected %>% 
-  summarise(across(runtime:budget,is.na
-               )) %>% 
+# Provides a summary table whether
+movies_selected %>%
+  summarise(across(title:budget, is.na)) %>%
   summarise(across(everything(), sum, .names = "missing_values_in_{.col}"))
 
 # Looking at each individual column
-movies_selected %>% 
-  filter(is.na(runtime)) %>% 
-  count() %>% 
+movies_selected %>%
+  filter(is.na(runtime)) %>%
+  count() %>%
   pull()
 
-movies_selected %>% 
-  filter(is.na(budget)) %>% 
-  count() %>% 
+movies_selected %>%
+  filter(is.na(budget)) %>%
+  count() %>%
   pull()
 
 # Quick way for overall
@@ -55,12 +55,16 @@ sum(is.na(movies_selected))
 
 ## Question 4
 ```{r}
-movies_runtime <- movies_selected  %>% 
-  mutate(runtime = na_if(runtime,"0"))
+movies_runtime <- movies_selected %>%
+  mutate(runtime = na_if(runtime, 0))
 
-movies_runtime %>% 
-  filter(is.na(runtime)) %>% 
-  count() %>% 
+movies_runtime %>%
+  filter(is.na(runtime)) %>%
+  count() %>%
+  pull()
+
+movies_runtime %>%
+  summarise(count = sum(is.na(runtime))) %>%
   pull()
 ```
 
@@ -68,78 +72,75 @@ movies_runtime %>%
 ## Question 5
 ```{r}
 # Change the runtime column value with 0 to the median
-movies_imputed <- movies_runtime %>% 
-  mutate(runtime = coalesce(runtime, 
-                            median(runtime, na.rm=TRUE)
-                            )
-         )
+movies_imputed <- movies_runtime %>%
+  mutate(runtime = coalesce(runtime, median(runtime, na.rm = TRUE)))
+
 # Another Check for the median
-median(movies_imputed$runtime, na.rm=TRUE)
+median(movies_imputed$runtime, na.rm = TRUE)
 
 # Check to see if any NA's
-movies_imputed %>% 
-  filter(is.na(runtime)) %>% 
-  count() %>% 
-  pull()      
-         
+movies_imputed %>%
+  filter(is.na(runtime)) %>%
+  count() %>%
+  pull()
 ```
 
 ## Question 6
 ```{r}
-#Least runtime
-movies_imputed %>% 
+# Find top 10 for Least runtime
+movies_imputed %>%
   slice_min(runtime, n = 10)
 
-# Most runtime
-movies_imputed %>% 
+# Find top 10 for Most runtime
+movies_imputed %>%
   slice_max(runtime, n = 10)
 ```
 
 ## Question 7
 ```{r}
+# Find the median of the budget column
 median_budget <- median(movies_imputed$budget)
-movies_imputes <- movies_imputed %>%
-  mutate(budget = if_else(budget < 100, median_budget, budget)
-         )
+
+# Convert the budget data below $100 to the median
+movies_imputed <- movies_imputed %>%
+  mutate(budget = if_else(budget < 100, median_budget, budget))
 ```
 
 
 ## Extension Q1
 
 ```{r}
-movie_budgets <- movies_imputes %>% 
+movie_budgets <- movies_imputed %>%
   mutate(budget_type = case_when(
-                                budget <= 12e6 ~ "Small Budget",
-                                budget < 40e6 & budget > 12e6 ~ "Medium Budget",
-                                budget >= 40e6 ~ "Big Budget"
-                                )
-        )
+    budget <= 12e6 ~ "Small Budget",
+    budget < 40e6 & budget > 12e6 ~ "Medium Budget",
+    budget >= 40e6 ~ "Big Budget"
+  ))
 ```
 
 
 ## Extension Q2
 
 ```{r}
-movies_raw_data %>% 
-  summarise(across(
-                  where(is.character),
-                   is.na
-                  )
-            ) %>%
+# Sumarise the missing values in all character columns
+movies_raw_data %>%
+  summarise(across(where(is.character), is.na)) %>%
   summarise(across(everything(), sum, .names = "missing_values_in_{col}"))
 
 
-movies_raw_data %>% 
-  summarise(across(
-                  where(is.numeric),
-                   is.na
-                  )
-            ) %>%
+# Summarise the missing values in all numeric colimns
+movies_raw_data %>%
+  summarise(across(where(is.numeric), is.na)) %>%
   summarise(across(everything(), sum, .names = "missing_values_in_{col}"))
-            
+
+
+
+
+movies_raw_data %>%
+  summarise(across(where(is.numeric), ~ sum(is.na(.x))))
+
+# Better way from answers
+# ~ - will hole the function and will then loop through each row
+# .x - is a placeholder which can be used with tild - short hand for each of 
+# these columns
 ```
-
-
-
-
-
