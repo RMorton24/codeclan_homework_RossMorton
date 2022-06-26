@@ -1,0 +1,372 @@
+---
+title: "Week 1 - Day 5 - Homework"
+output:
+  html_document:
+    df_print: paged
+---
+
+## Read in Libraries
+
+```{r}
+library(tidyverse)
+library(janitor)
+
+```
+
+## Read in data to review
+
+```{r}
+books_data <- read_csv("data/books.csv")
+```
+
+### Review dataset
+
+```{r}
+# Dimensions of data
+dim(books_data)
+```
+
+```{r}
+# Names of the columns
+names(books_data)
+```
+
+```{r}
+# More information on the dataset
+glimpse(books_data)
+```
+
+### Is there missing data?
+```{r}
+# Determine if there are any missing values in the dataset
+sum(is.na(books_data))
+```
+
+### Clean the data
+
+```{r}
+# Changing the column names to match snake_case
+books_data <- books_data %>% 
+  clean_names(., "snake") %>% 
+  rename(row_id = rowid,
+         isbn_13 = isbn13)
+books_data
+```
+
+### What is the mean of the numeric columns:
+
+```{r}
+books_data %>% 
+  summarise(across(where(is.numeric), 
+                   .fns = ~mean(.x),
+                   .names = "mean_of_{.col}"))
+```
+
+## What is the median of the numeric columns
+
+```{r}
+books_data %>% 
+  summarise(across(where(is.numeric), 
+                   .fns = ~median(.x),
+                   .names = "median_of_{.col}"))
+```
+
+### How many books have average ratings but have no reviews/ratings
+
+```{r}
+books_data %>% 
+  summarise(no_ratings_has_rating = sum(ratings_count == 0 & 
+                                          average_rating > 0),
+            no_txt_rev_has_rating = sum(text_reviews_count == 0 & 
+                                          average_rating > 0),
+            no_rev_has_rating = sum((ratings_count + text_reviews_count) == 0 &
+                                      average_rating > 0)
+         )
+
+```
+
+As there are books which have an average rating with no review - which strictly
+doesn't make sense. Therefore this will be set to a new variable for future use.
+
+```{r}
+books_rating_fltr <- books_data %>% 
+  filter((text_reviews_count + ratings_count) > 100)
+```
+
+# Find the book with the highest rating average_rating
+
+```{r}
+# Find the highest rated books where the number of ratings > 0
+books_data %>% 
+  select(title, average_rating, ratings_count, text_reviews_count) %>% 
+  filter((text_reviews_count + ratings_count) > 0) %>% 
+  slice_max(average_rating, n=5)
+```
+
+Since the values of ratings count are generally low, let's complete this again
+but where there are over 100 reviews/ratings.
+
+```{r}
+# Find the highest rated books where the number of ratings > 100
+books_rating_fltr %>% 
+  select(title, average_rating, ratings_count, text_reviews_count) %>% 
+  slice_max(average_rating, n=5)
+```
+
+# Books with the highest number of ratings/reviews
+
+```{r}
+# Find the highest rating/reviews books where the number of ratings > 0
+books_data %>% 
+  select(title, ratings_count, text_reviews_count) %>% 
+  mutate(total_reviews = (text_reviews_count + ratings_count)) %>% 
+  slice_max(total_reviews, n=5)
+```
+
+```{r}
+# Most text reviews
+books_data %>% 
+  select(title, text_reviews_count) %>% 
+  slice_max(text_reviews_count, n=5)
+```
+
+```{r}
+# Most text reviews
+books_data %>% 
+  select(title, ratings_count) %>% 
+  slice_max(ratings_count, n=5)
+```
+
+### Find the books with the longest number of characters for their title
+
+```{r}
+books_data %>% 
+  mutate(title_character_length = nchar(title)) %>% 
+  select(title, title_character_length) %>% 
+  slice_max(title_character_length, n=5)
+```
+
+# Publisher Information
+
+### Publisher with the highest average rating
+
+```{r}
+books_data %>% 
+  group_by(publisher) %>% 
+  summarise(average_publisher_rating = mean(average_rating)) %>% 
+  slice_max(average_publisher_rating, n=5, with_ties = FALSE)
+```
+
+### Publishers with the highest average rating (where the review count + rating is over 100)
+
+```{r}
+books_rating_fltr %>% 
+  group_by(publisher) %>% 
+  summarise(average_publisher_rating = mean(average_rating)) %>% 
+  slice_max(average_publisher_rating, n=5)
+```
+
+# Authors
+
+### Top 5 author(s)
+
+```{r}
+# Will use filter data to exclude books with less than 100 reviews
+books_rating_fltr %>% 
+  group_by(authors) %>% 
+  summarise(average_author_rating = mean(average_rating)) %>% 
+  slice_max(average_author_rating, n=5)
+
+# Since anonymous is in top 5 this will be removed
+books_rating_fltr %>% 
+  group_by(authors) %>% 
+  filter(authors != "Anonymous") %>% 
+  summarise(average_author_rating = mean(average_rating)) %>% 
+  slice_max(average_author_rating, n=5)
+```
+
+### Top 5 authors but separating out co-authors into separate rows
+
+```{r}
+books_rating_fltr %>% 
+  # split co-authors
+  mutate(authors = strsplit(authors, "/")) %>% 
+  # unnest to create individual rows
+  unnest(authors) %>% 
+  group_by(authors) %>% 
+  summarise(average_author_rating = mean(average_rating)) %>% 
+  slice_max(average_author_rating, n=5)
+```
+
+### Authors with most releases
+
+```{r}
+books_data %>% 
+  mutate(authors = strsplit(authors, "/")) %>% 
+  unnest(authors) %>% 
+  group_by(authors) %>% 
+  summarise(number_of_books = n()) %>% 
+  slice_max(number_of_books, n=5)
+```
+
+### How many books are written by multiple people?
+
+```{r}
+
+books_rating_fltr %>% 
+  mutate(number_authors = str_count(authors, "/") +1) %>%
+  filter(number_authors > 1) %>% 
+  summarise(num_coauthor_books = n())
+
+  
+```
+
+### How is the co-author split for the number of books in data set?
+
+```{r}
+books_rating_fltr %>% 
+  mutate(number_authors = str_count(authors, "/") +1) %>%
+  group_by(number_authors) %>% 
+  summarise(number_of_books = n())
+```
+# Languages
+### Number of books in different languages
+
+```{r}
+books_data %>%
+  group_by(language_code) %>%
+  summarise(books_in_language = n()) %>% 
+  arrange(desc(books_in_language))
+```
+
+### Add more data to convert the language code into the language
+
+```{r}
+# Load in language code database (ISO-639-1 and 6963-2)
+# from https://datahub.io/core/language-codes#resource-language-codes
+
+lang_code_dat <- read_csv("data/language-codes-full.csv") %>% 
+  rename(language = English,
+         language_code_3 = alpha2,
+         language_code = "alpha3-b",
+         language_code_2 = "alpha3-t") %>% 
+  mutate(language_code = case_when(
+    language_code_2 %in% books_data$language_code ~ language_code_2,
+    language_code_3 %in% books_data$language_code ~ language_code_3,
+    TRUE ~ language_code
+  ))
+
+```
+
+### Create a new column of the language using the language code
+
+```{r}
+books_language <- merge(books_data, lang_code_dat, by = "language_code", 
+                        all.x = TRUE, all.y = FALSE ) %>%
+  mutate(language = case_when(language_code == "en-US" ~ "English US",
+                                   language_code == "en-GB" ~ "English UK",
+                                   language_code == "en-CA" ~ "English Canada",
+                                   TRUE ~ language)
+         )
+
+```
+
+### Show the language for each language code:
+
+```{r}
+books_language %>% 
+  group_by(language) %>% 
+  select(language_code, language) %>% 
+  distinct() %>% 
+  ungroup()
+```
+
+### How many books in each language
+
+```{r}
+books_language %>% 
+  group_by(language) %>% 
+  summarise(books_in_language = n()) %>% 
+  arrange(desc(books_in_language))
+```
+
+### What is the longest book for each language
+
+```{r}
+books_language %>% 
+  group_by(language) %>% 
+  summarise(longest_book = max(num_pages)) %>% 
+  arrange(desc(longest_book))
+```
+# Dates for books
+### How many books are published each year?
+
+```{r}
+books_data %>% 
+  mutate(publication_year = 
+           format(as.Date(publication_date, format = "%m/%d/%Y"), "%Y")) %>% 
+  group_by(publication_year) %>% 
+  summarise(books_released = n())
+
+
+# Due to two unknown dates (which exceed standard dates) re-write and set to 
+# a variable for use.
+books_pub_year <- books_data %>% 
+  mutate(publication_date = recode(publication_date,
+    "11/31/2000" = "11/30/2000",
+    "6/31/1982" = "6/30/1982"
+  )) %>% 
+  mutate(publication_year = 
+           format(as.Date(publication_date, format = "%m/%d/%Y"), "%Y"))
+
+# Find the number of books published each year from data set
+books_pub_year %>% 
+  group_by(publication_year) %>% 
+  summarise(books_released = n())
+```
+
+### Number of books published in each decade n descending order
+
+```{r}
+books_pub_year %>% 
+  mutate(decade_of_release = floor(as.numeric(publication_year)/10) * 10) %>% 
+  mutate(decade_of_release = 
+           str_c(decade_of_release, "to", decade_of_release + 9, sep = " ")) %>% 
+  group_by(decade_of_release) %>% 
+  summarise(books_released_in_decade = n()) %>% 
+  arrange(desc(books_released_in_decade))
+```
+
+### Number of authors under each publisher
+
+```{r}
+books_data %>% 
+  mutate(authors = strsplit(authors, "/")) %>% 
+  unnest(authors) %>% 
+  group_by(publisher) %>% 
+  summarise(number_of_authors = n()) %>% 
+  arrange(desc(number_of_authors))
+```
+
+### Authors largest gap between releases
+
+
+```{r}
+# Load library for time_length funcntion
+library(lubridate)
+```
+
+### Get the years between release within data set for authors
+```{r}
+books_pub_year %>% 
+  mutate(authors = strsplit(authors, "/")) %>%
+  unnest(authors) %>% 
+  group_by(authors) %>% 
+  mutate(publication_date = as.Date(publication_date, "%m/%d/%Y")) %>% 
+  summarise(
+    years_between_release_rng = time_length(
+        difftime(max(publication_date), min(publication_date)), "years")) %>% 
+  # Get top 5
+  slice_max(years_between_release_rng, n=5)
+  
+```
