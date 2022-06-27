@@ -1,0 +1,141 @@
+---
+title: "week 2 - Day 1 Homework"
+output: html_notebook
+---
+# Q1.1 - Joins
+## Read in the CSV files and packages
+### Packages
+```{r}
+library(tidyverse)
+library(janitor)
+```
+### q1 - Read csv's
+```{r}
+card_data <- read_csv("data/CardBase.csv") %>% 
+  clean_names()
+customer_data <- read_csv("data/CustomerBase.csv") %>% 
+  clean_names()
+fraud_data <- read_csv("data/FraudBase.csv") %>% 
+  clean_names()
+transaction_data <- read_csv("data/TransactionBase.csv") %>% 
+  clean_names()
+```
+### Q2-
+join card details and customer details by card id- so that all record
+of card details and any matching records in customer details are kept.
+
+customer_data = 5674x4
+card_data = 500x4
+
+expected output= (500(plus matches if any)) x (4 + (3 from customer_data))
+
+result shows a 1:1 relationship for customer_id
+
+```{r}
+left_join(card_data, customer_data, by = c("cust_id" = "cust_id"))
+
+```
+
+### Question 3-
+Join fraud details with transaction details
+keep - all rows in both tables
+
+transaction_data = 10,000 x 5
+fraud_data = 109 x 2
+
+expected output - (10,000 + additional matches) x 2+4
+
+results- tell you that 1:1 relationship between transaction_id
+all transactions in the fraud data base are accounted for in the transaction_data
+```{r}
+full_join(fraud_data, transaction_data, by = c("transaction_id" = "transaction_id"))
+```
+
+### Question 4
+Join card details with transaction details
+keep - rows from first match the second are returned
+  only return results from 1st table once
+  
+card_data = 500x4
+transaction_data = 10000 x 5
+relationship - card:transaction = 1:many
+
+result - 10000 x 3+5
+
+```{r}
+right_join(card_data, transaction_data, by = c("card_number" = "credit_card_id"), keep = FALSE)
+card_data
+transaction_data
+```
+
+```{r}
+right_join(transaction_data, card_data, by = c("credit_card_id" = "card_number"), keep = FALSE)
+```
+
+# 1.2
+# Question 5
+Read in data sets
+```{r}
+hats <- read_csv("data/hat_observations.csv")
+```
+
+```{r}
+hat_separated <- hats %>% 
+  separate(observation,
+           into = c("hat_colour", "hat_type"),
+           sep = ",")
+
+hat_separated
+```
+
+### Question 6
+```{r}
+hat_dates <- hat_separated %>% 
+  unite(date,
+        c(day, month, year),
+        sep = "/") %>% 
+  filter(hat_type == "beret") %>% 
+  slice_max(observation_count)
+
+hat_dates
+```
+
+# Extension
+### Q1
+
+cand_number = cust_id, card_number = credit_card_id, 
+transaction_id = transaction_id
+
+```{r}
+left_join(card_data, customer_data, by = c("cust_id" = "cust_id")) %>% 
+  left_join(transaction_data, by = c("card_number" = "credit_card_id")) %>% 
+  right_join(fraud_data, by = c("transaction_id" = "transaction_id"))
+```
+
+### Question 2
+```{r}
+exam_score <- read_csv("data/exam_scores.csv")
+```
+
+Read in exam_scores and transform it into long format with two new columns exam_question and score. Then, using separate and select, remove superfluous information from the values in exam_question
+
+```{r}
+# Don't need separate and select?
+exam_score %>% 
+  pivot_longer(cols = starts_with("exam"),
+               names_to = "exam_question",
+               names_prefix = "exam_Q",
+               values_to = "score")
+```
+
+```{r}
+# Completing as per the question
+exam_score %>% 
+  pivot_longer(cols = starts_with("exam"),
+               names_to = "exam_question",
+               values_to = "score") %>% 
+  separate(exam_question, into = c("temp", "exam_question"),
+           sep = "Q") %>% 
+  select(-temp)
+```
+
