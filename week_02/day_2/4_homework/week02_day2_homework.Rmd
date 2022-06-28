@@ -1,0 +1,151 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+```
+# Question 1
+```{r}
+# Load in data
+code_clan_tweets <- read_csv("data/code_clan_tweets.csv")
+```
+
+```{r}
+# Rows and columns
+dim(code_clan_tweets)
+# Names of the columns
+names(code_clan_tweets)
+```
+```{r}
+# Look at a summary of the data
+glimpse(code_clan_tweets)
+```
+```{r}
+#check for errors in columns
+code_clan_tweets %>% 
+  summarise(across(.fns = ~sum(is.na(.x))))
+```
+
+# Question 2
+```{r}
+code_clan_tweets %>% 
+  filter(is_quote != TRUE) %>% 
+  summarise(number_of_favourites = sum(favorite_count))
+```
+
+
+# Question 3
+```{r}
+code_clan_tweets %>%
+  filter(is_quote != TRUE) %>% 
+  group_by(source) %>% 
+  summarise(mean_count = mean(retweet_count, na.rm = TRUE))
+  
+```
+
+# Question 4
+```{r}
+code_clan_tweets %>%
+  mutate(media_type = if_else(is.na(media_type), "text", media_type)) %>% 
+  group_by(media_type) %>% 
+  summarise(count_of_likes = sum(favorite_count))
+```
+
+# Question 5
+```{r}
+code_clan_tweets %>% 
+  summarise(mean_length = mean(display_text_width, na.rm = TRUE))
+```
+
+```{r}
+code_clan_tweets %>% 
+  mutate(tweet_length = nchar(text)) %>% 
+  summarise(mean_tweet_length = mean(tweet_length))
+
+```
+
+# Question 6
+```{r}
+code_clan_info <- read_csv("data/code_clan_info.csv")
+```
+```{r}
+glimpse(code_clan_info)
+```
+code_clan_info = 234x15
+code_clade_tweets = 234 x 27
+primary key = tweet_id
+expected 1:1 relationship
+expected size = 234 x 15+26
+
+```{r}
+code_clan_joined <- left_join(code_clan_tweets, code_clan_info, 
+                              by = c("tweet_id" = "tweet_id"))
+
+code_clan_joined
+```
+# Question 7
+```{r}
+codeclan_hashtags <- code_clan_joined %>%
+  mutate(hashtags = str_to_lower(hashtags)) %>% 
+  filter(!(is.na(hashtags))) %>%
+  select(tweet_id, hashtags)
+
+codeclan_hashtags
+  
+```
+# Question 8
+```{r}
+# Finding the "c(" using str_detect and str_sub
+codeclan_hashtags %>%
+  mutate(found_with_detect = str_detect(hashtags, "c\\(")) %>% 
+  mutate(found_with_sub = (str_sub(hashtags, 1, 2) == "c("))
+
+```
+
+# Question 8
+```{r}
+# Method 1 - Check tweets which contain "Edinburgh"
+code_clan_joined %>% 
+  summarise(contains_pattern = sum(
+    str_detect(text, "[Ee][Dd][Ii][Nn][Bb][Uu][Rr][Gg][Hh]")))
+
+# Method 2 - Using string to lower
+code_clan_joined %>% 
+  mutate(text = str_to_lower(text)) %>% 
+  summarise(contains_pattern = sum(str_detect(text, "edinburgh")))
+
+code_clan_joined %>% 
+  summarise(contains_pattern = sum(
+    str_detect(text, "[Ee][:alpha:]{7}[Hh]")))
+
+# Method below is not quite working
+# code_clan_joined %>% 
+#   mutate(contains_pattern = (
+#     str_detect(text, "[Ee][:alpha:]{7}[Hh]"))) %>% 
+#   filter(contains_pattern == TRUE) %>% 
+#   select(contains_pattern, text)
+```
+
+Twitter User name guidelines:
+Your username cannot be longer than 15 characters. Your name can be longer 
+(50 characters) or shorter than 4 characters, but usernames are kept shorter 
+for the sake of ease.
+A username can only contain alphanumeric characters (letters A-Z, numbers 0-9)
+with the exception of underscores, as noted above. Check to make sure your 
+desired username doesn't contain any symbols, dashes, or spaces.
+
+
+
+```{r}
+username_pattern <- "@[_[:alnum:]]{4,50}"
+users_tweet <- code_clan_joined %>% 
+  select(text) %>% 
+  mutate(tweeted_users = str_extract_all(text, username_pattern))
+  
+```
+
+
+
+

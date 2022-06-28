@@ -1,6 +1,8 @@
 ---
 title: "week 2 - Day 1 Homework"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 # Q1.1 - Joins
 ## Read in the CSV files and packages
