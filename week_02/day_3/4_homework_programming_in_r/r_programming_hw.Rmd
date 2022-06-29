@@ -1,0 +1,96 @@
+---
+title: "Programming in R Homework"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: ../../../styles.css
+  pdf_document: default
+---
+
+# MVP
+
+<br> 
+
+**Question 1.** \
+Find the weather forecast for the next three days online. Create a list of lists in which each inner list should be labelled with the name of the day of the week. Each inner list should contain named elements telling you the temperature, chance of rain and wind speed.
+
+<br>
+
+**Question 2.** \
+Using the list you've just made find:
+
+  i. The chance of rain tomorrow
+  ii. The wind speed on the day after tomorrow
+  iii. The temperature tomorrow.
+
+<br>
+
+**Question 3.** \
+Find a 14 day forecast online and create a matrix of the forecasts for temperature, where each week is one row and columns correspond to days.
+
+You will want to give a name to the matrix you create.
+
+<br>
+
+**Question 4.** \
+From the matrix you just made select:
+
+  i. The third day of the second week
+  ii. The whole second week
+  iii. The first, third and fifth days in both weeks.
+
+
+<br>
+
+**Question 5.** \
+Write a function that pre-appends "The answer is: " to any character input, while for numeric input, it either just returns the number for numbers less than 10, or divides the number by 10 for numbers greater than 10. For anything else return "Invalid input".
+
+<br>
+
+**Question 6.** \
+Write a function which checks if two vectors have the same elements. 
+
+* If they have the same elements in the same order, return "Exactly the same"
+* If they have the same elements but in a different order, return "The same"
+* If they don't have the same elements, return "Different".
+
+
+<details>
+<summary>**Hints**</summary>
+* You can check if two vectors have the same elements but in a different order by using `sort` to sort each vector first and then checking if they are equal.
+* Have a look at the `all()` function
+</details>
+</blockquote>
+
+
+# Extension
+
+<br>
+
+**Question 7.** \
+Write code that prints a multiplication table for numbers up to 12. i.e. there will be 12 rows and 12 columns, and each element should be the row number multiplied by the column number.
+
+*From: https://adriann.github.io/programming_problems.html*
+
+<br>
+
+**Question 8.** \
+Write a function that takes a vector, and creates a text art histogram, like the one below.
+
+You may want to use the function `cat()`. This is similar to `print()`, but prints directly, without vector markers. You can also include newlines `"\n"` when using `cat()`.
+
+For example, the vector
+`c(1, 2, 3, 4, 5, 1, 3, 4, 5, 1, 3, 4, 4, 3, 3, 3, 3)`
+should produce the histogram below - the histogram dislpays the number of times each number appears in the vector.
+
+```
+1 | ***
+2 | *
+3 | *******
+4 | ****
+5 | **
+```
+
