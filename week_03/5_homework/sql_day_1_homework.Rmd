@@ -1,0 +1,144 @@
+---
+title: "SQL Day 1 Homework"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: ../../../styles.css
+  pdf_document: default
+---
+
+In these practice questions you'll return again to the `omni_pool` database, so re-establish your connection in `DBeaver` if it has lapsed. 
+
+<br>
+<div class='emphasis'>
+**Submission**
+
+When answering these questions, please save your `SQL` script in `DBeaver`, copy it over to your homework repo and then add, commit and push that for submission tonight. Please add section and question numbers as `SQL` comments, like so:
+
+```{sql, eval=FALSE}
+/* MVP */
+/* Q1 */
+```
+</div>
+<br>
+
+
+# MVP
+
+<br>
+
+**Question 1.**\
+Find all the employees who work in the 'Human Resources' `department`.
+
+<br>
+
+**Question 2.**\
+Get the `first_name`, `last_name`, and `country` of the employees who work in the 'Legal' `department`.
+
+<br>
+
+**Question 3.**\
+Count the number of employees based in Portugal.
+
+<br>
+
+**Question 4.**\
+Count the number of employees based in either Portugal or Spain.
+
+<br>
+
+**Question 5.**\
+Count the number of pay_details records lacking a `local_account_no`.
+<br><br>
+<details>
+<summary>**Hint**</summary>
+Run a query first to get some records in the `pay_details` table, just to see what the data looks like
+</details>
+
+<br>
+
+**Question 6.**\
+Are there any pay_details records lacking both a `local_account_no` and `iban` number?
+
+<br>
+
+**Question 7.**\
+Get a table with employees `first_name` and `last_name` ordered alphabetically by `last_name` (put any `NULL`s last).
+
+<br>
+
+**Question 8.**  
+Get a table of employees `first_name`, `last_name` and `country`, ordered alphabetically first by `country` and then by `last_name` (put any `NULL`s last).
+
+<br>
+
+**Question 9.**  
+Find the details of the top ten highest paid employees in the corporation.
+
+<br>
+
+**Question 10.**  
+Find the `first_name`, `last_name` and `salary` of the lowest paid employee in Hungary.
+
+<br>
+
+**Question 11.**\
+How many employees have a `first_name` beginning with 'F'?
+
+<br>
+
+**Question 12.**  
+Find all the details of any employees with a 'yahoo' `email` address?
+
+<br>
+
+**Question 13.**
+Count the number of pension enrolled employees not based in either France or Germany.
+
+<br>
+
+**Question 14.**  
+What is the maximum `salary` among those employees in the 'Engineering' department who work 1.0 full-time equivalent hours (`fte_hours`)?
+
+<br>
+
+**Question 15.**  
+ Return a table containing each employees `first_name`, `last_name`, full-time equivalent hours (`fte_hours`), `salary`, and a new column `effective_yearly_salary` which should contain `fte_hours` multiplied by `salary`.
+
+# Extension
+
+<br>
+
+**Question 16.**  
+The corporation wants to make name badges for a forthcoming conference. Return a column `badge_label` showing employees' `first_name` and `last_name` joined together with their `department` in the following style: 'Bob Smith - Legal'. Restrict output to only those employees with stored `first_name`, `last_name` and `department`. 
+
+<br>
+
+**Question 17.**  
+One of the conference organisers thinks it would be nice to add the year of the employees' `start_date` to the `badge_label` to celebrate long-standing colleagues, in the following style 'Bob Smith - Legal (joined 1998)'. Further restrict output to only those employees with a stored `start_date`.
+<br><br>
+[If you're really keen - try adding the month as a string: 'Bob Smith - Legal (joined July 1998)'] 
+<br><br>
+<details>
+<summary>**Hints**</summary>
+* Do some research on the `SQL` `EXTRACT()` function. 
+* For the extension to the extension (!), the `PostgreSQL` `TO_CHAR()` function might help.
+* To be honest, date and time handling is one of the areas in which the functionality of specific RDBMSs deviates most notably from the `ANSI SQL` standard.
+</details>
+  
+<br>
+
+**Question 18.**  
+Return the `first_name`, `last_name` and `salary` of all employees together with a new column called `salary_class` with a value `'low'` where `salary` is less than 40,000 and value `'high'` where `salary` is greater than or equal to 40,000.
+<br><br>
+<details>
+<summary>**Hints**</summary>
+* Investigate how to use a `SQL` `CASE` statement to return the required values `'low'` and `'high'` based on the value of `salary`.
+* Think carefully how to deal with `NULL` salaries.
+</details>
+  
+
+
