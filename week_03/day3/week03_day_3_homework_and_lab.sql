@@ -278,6 +278,8 @@ SELECT
 	first_name ,
 	last_name ,
 	department ,
+	salary,
+	fte_hours,
 	salary/(SELECT avg_salary FROM largest_department) AS salary_ratio,
 	fte_hours/(SELECT avg_fte FROM largest_department) AS fte_ratio
 FROM employees 
@@ -310,6 +312,8 @@ SELECT
 	e.first_name ,
 	e.last_name ,
 	e.department ,
+	e.salary,
+	e.fte_hours,
 	e.salary/dv.avg_salary AS salary_ratio,
 	fte_hours/dv.avg_fte AS fte_ratio
 FROM employees AS e LEFT JOIN department_values AS dv
@@ -393,9 +397,27 @@ WITH salary_table AS (SELECT
 )
 SELECT
 	st.salary_class,
-	count(DISTINCT ec.id) AS comitee_employee_count
-FROM employees_committees AS ec LEFT JOIN salary_table AS st  
+	count(DISTINCT(ec.employee_id)) AS comitee_employee_count
+FROM employees_committees AS ec inner JOIN salary_table AS st  
 ON ec.employee_id = st.id 
 GROUP BY st.salary_class
+
+
+
+
+
+SELECT 
+  CASE 
+    WHEN e.salary < 40000 THEN 'low'
+    WHEN e.salary IS NULL THEN 'none'
+    ELSE 'high' 
+  END AS salary_class,
+  COUNT(DISTINCT(e.id)) AS num_committee_members
+FROM employees AS e INNER JOIN employees_committees AS ec
+ON e.id = ec.employee_id
+INNER JOIN committees AS c
+ON ec.committee_id = c.id
+GROUP BY salary_class
+
 
 
