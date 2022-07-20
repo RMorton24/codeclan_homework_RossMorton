@@ -187,6 +187,27 @@ backpack %>%
        y = "Percentage",
        fill = "Back Problems")
 
+# The plot everyone loves
+backpack %>% 
+  group_by(back_problems) %>% 
+  summarise(percent = 100* n() / nrow(backpack)) %>% 
+  mutate(temp_var = 1) %>% 
+  ggplot(aes(x = temp_var,
+             y = percent,
+             fill = factor(back_problems) == 1)) +
+  geom_col() +
+  scale_fill_manual(values = c("Purple", "Orange")) +
+  #scale_fill_distiller(palette = "Dark2") +
+  geom_text(aes(label = paste0(percent, "%")),
+            position = position_stack(vjust = 0.5)) +
+  theme_minimal() +
+  scale_x_continuous(name = "", breaks = c()) +
+  scale_y_continuous(name = "", breaks = c()) +
+  labs(title = "Students with Back Problems",
+       y = "Percentage",
+       fill = "Back Problems") +
+  coord_polar(theta = 'y')
+
 backpack %>% 
   group_by(back_problems) %>% 
   summarise(percent = 100* n() / nrow(backpack)) %>% 
@@ -202,6 +223,7 @@ backpack %>%
   scale_x_continuous(name = "", breaks = c()) +
   labs(title = "Students with Back Problems",
        y = "Percentage")
+  
   
 ```
 ## Discussion
