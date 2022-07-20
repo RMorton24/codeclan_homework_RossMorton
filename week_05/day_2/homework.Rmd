@@ -290,12 +290,18 @@ of bag to body weight.
 
 
 
-3 Extensions
+## 3 Extensions
 
 
-Question 1.
+# Question 1.
 
 Does reported backpain differ across the year groups? Ignore year 0 in your data.
+
+## Thoughts
+Can complete similar to before but will need to replace sex with year. Might also
+need to check the number of pupils in each year.
+
+## Code and Output
 
 ```{r}
 backpack %>% 
@@ -312,14 +318,54 @@ backpack %>%
   geom_text(aes(label = paste0(percent, "%")),
             position = position_stack(vjust = 0.5)) +
   my_theme +
+  scale_x_continuous(breaks = seq(0, 6, 1)) + 
   labs(title = "Students with Back Problems For each Year Group",
        y = "Percentage",
        x = "Year Group",
        fill = "Back Problems")
 ```
 
-Question 2.
+```{r}
+backpack %>%
+  group_by(year) %>% 
+  summarise(num_pupils = n()) %>% 
+  ggplot(aes(x = year,
+         y = num_pupils)) +
+  geom_col() +
+  my_theme
+```
+
+
+## Discussion
+The year groups from 1 to 5 have issues whereas 0 and 6 have no issues. However
+For the number of pupils in years 0 and 6 are very low when compared to the other
+years. Therefore if there were more there is the possibility that this would be
+around 30% similar to other years.
+
+# Question 2.
 
 Is there a difference between how heavy the bags those in different years carry?
 
+## Thoughts
+Could do a histogram for each year with a distribution of weight.
 
+## Code and Output
+```{r}
+backpack %>% 
+ggplot(aes(x = backpack_weight)) +
+  geom_histogram(binwidth = 1,
+                 aes(fill = year,
+                 ), colour = "black",
+                 show.legend = FALSE) +
+  labs(title = "Distribution of Backpack Weight",
+       x = "Backpack Weight (lbs)") +
+  facet_wrap(~ year)+
+  scale_y_continuous(expand = c(0,0)) + #breaks = seq(1, max(backpack$backpack_weight), 2)) +
+  my_theme
+  
+```
+
+## Discussion
+Majority of years show a similar skew to back weights of around 10lbs. The 
+distribution of bag weight it more spread out for year 5 in comparisson to 
+other years.
