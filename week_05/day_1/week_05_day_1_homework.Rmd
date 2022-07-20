@@ -95,7 +95,7 @@ device_data %>%
   ggplot(aes(x = time,
              y = step_count)) +
   geom_line(aes(colour = device)) +
-  facet_wrap(~ id)
+  facet_grid(id ~ device)
 
 ```
 
@@ -229,8 +229,7 @@ Now show the sales from the four competitors as a line graph. Include an extra l
 
 ```{r}
 competitors %>% 
-  ggplot(aes(x = year,
-             y = revenue * 1e-6,
+  ggplot(aes(x = year,          y = revenue * 1e-6,
              colour = company)) +
   geom_line(size = 1) +
   geom_point(size = 3) +
@@ -259,6 +258,6 @@ device_data %>%
        y = "Step Count (k)\n",
        colour = "Device") + 
   theme_quickbit()+
-  facet_wrap(~ id)
+  facet_grid(id ~ device)
 
 ```
