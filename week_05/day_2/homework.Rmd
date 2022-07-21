@@ -211,6 +211,7 @@ backpack %>%
 backpack %>% 
   group_by(back_problems) %>% 
   summarise(percent = 100* n() / nrow(backpack)) %>% 
+  mutate(back_problems = if_else(back_problems == 1, "Problem", "No Problem")) %>% 
   ggplot(aes(x = back_problems,
              y = percent,
              fill = factor(back_problems))) +
@@ -220,9 +221,10 @@ backpack %>%
   geom_text(aes(label = paste0(percent, "%")),
             position = position_stack(vjust = 0.5)) +
   theme_minimal() +
-  scale_x_continuous(name = "", breaks = c()) +
+  #scale_x_continuous(name = "", breaks = c()) +
   labs(title = "Students with Back Problems",
-       y = "Percentage")
+       y = "Percentage",
+       x = "Back Issues")
   
   
 ```
