@@ -1,0 +1,121 @@
+---
+title: "Probability homework"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    df_print: paged
+    css: ../../../styles.css
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, messages = FALSE, fig.align = 'center')
+```
+
+
+# MVP
+
+## The Titanic
+
+```{r, echo=FALSE, fig.cap="**Fig. 1.** The RMS Titanic leaving Southport, 10th April 1912 (public domain)", out.width = '60%'}
+knitr::include_graphics("images/RMS_Titanic.jpg")
+```
+
+A data set detailing the survival or death of passengers and crew members on the RMS Titanic is given in the `data` folder for this homework - use this data and **not** the built-in `Titanic` dataset in `R`. 
+
+Some time after the disaster a journalist wrote that crew members were *more likely* to have survived the sinking than passengers. This was disputed by a descendant of one of the surviving crew members, who suggested that the opposite was true, i.e. passengers were *more likely* to have survived than crew.  
+
+**Question**  
+Calculate the conditional probabilities $\textrm{prob}(\textrm{survived} \mid \textrm{crew})$ and $\textrm{prob}(\textrm{survived} \mid \textrm{passenger})$ to settle this dispute.
+
+Have a look at the distinct values of the `class` variable, this will tell you whether each individual was a passenger (1st, 2nd or 3rd class) or a member of the crew (treat restaurant staff as crew)
+
+**Loading packages**
+
+You may want to use `prob` and `gtools` later in the homework, and the `tidyverse` for this section, but if you load `prob` after `tidyverse`, `dplyr::filter()` will be masked. So load your packages in this order:
+
+```{r, message = FALSE}
+library(prob)
+library(gtools)
+library(tidyverse)
+```
+
+<details>
+<summary>**Hints**</summary>
+
+* You may want to create a `crew` column containing values `TRUE` or `FALSE` to help with this
+* For $\textrm{prob}(\textrm{survived} \mid \textrm{crew})$ think 'what proportion of the crew survived?', and similar for $\textrm{prob}(\textrm{survived} \mid \textrm{passenger})$ 
+</details>
+<br>
+
+<br>
+
+## Probability Consolidation Questions
+
+Today was pretty full-on! Here are some problems to help you consolidate what you learned. Feel free to work on paper or in `R`, whichever you are most comfortable with:
+
+**MVP - try _four_ of the problems**  
+**Extension - try more than four!**
+
+<br>
+**Question 1.**  
+If I roll a six-sided dice once, what is the probability of getting a number less than 5?
+
+<br>
+**Question 2.**  
+How many outcomes are there in the sample space of an experiment in which we toss three dice?
+
+<br>
+
+**Question 3.**  
+In an experiment where we roll four dice:
+
+  * how many outcomes are in the event where the total of the four dice equals $5$, $6$ or $7$)?
+  * what is the probability of this event?
+  * what assumptions do we apply in answering part ii?
+  
+<details>
+<summary>**Hint**</summary>
+For part i, `rowSums(.)` may help you setup up the necessary random variable `total` (or you can use `pivot_longer()`)
+</details>
+
+<br>
+
+**Question 4.**  
+Five chairs are placed in a row in a room, along with five people of differing height. The people sit down randomly on the chairs. What is the probability that they sit in order of decreasing height, left to right?
+
+<details>
+<summary>**Hint**</summary>
+This is an arrangement where order matters. Of all the possible arrangements, how many are correct?
+</details>
+
+<br>
+**Question 5.**  
+I roll six dice:
+
+  * what is the probability I see the numbers 6, 5, 4, 3, 2 and 1 in order on the dice, left to right?
+  * what is the probability I see one each of the numbers 6, 5, 4, 3, 2 and 1 on the dice regardless of order?
+  
+<details>
+<summary>**Hint**</summary>
+Have a look at the `isin()` function in the `prob` package. For example, to `filter` all rows containing $6$, $1$, $2$ in that order, you could use `isin(., c(6, 1, 2), ordered = TRUE)`
+</details>
+
+<br>
+**Question 6.**  
+If I draw a single card from a 52-card deck, and it is black, what is the probability that its suit is spades? <br>
+
+<details>
+<summary>**Hints**</summary>
+
+* Investigate the `cards()` function in the `prob` package, if you'd like to try this in R (make a deck without jokers). 
+* You could think about adding your own `black_card` random variable to the sample space, which would be `TRUE` if the `suit` is 'Spade' or 'Club', and `FALSE` otherwise.
+</details>
+
+<br>
+
+# Extension
+
+Answer more than 4 consolidation questions

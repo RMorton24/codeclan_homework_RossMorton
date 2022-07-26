@@ -5,7 +5,7 @@ library(bslib)
 library(plotly)
 
 
-thematic::thematic_shiny(font = "auto")
+#thematic::thematic_shiny(font = "auto")
 game_sales <- CodeClanData::game_sales
 
 ui <- fluidPage(

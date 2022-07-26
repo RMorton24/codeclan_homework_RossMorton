@@ -1,0 +1,198 @@
+---
+title: "Probablility Homework"
+output: html_notebook
+---
+
+```{r}
+library(prob)
+library(gtools)
+library(tidyverse)
+```
+```{r}
+titanic <- read_csv("data/titanic.csv")
+```
+
+# Question
+Calculate the conditional probabilities prob(survived∣crew) and prob(survived∣passenger) to settle this dispute.
+
+```{r}
+titanic <- titanic %>% 
+  mutate(crew = case_when(
+    str_detect(class, "crew|staff") ~ TRUE,
+    TRUE ~ FALSE))
+```
+```{r}
+crew_survived <- titanic %>%
+  filter(survived == "yes", crew == TRUE)
+
+passenger_survived <- titanic %>% 
+  filter(survived == "yes", crew == FALSE)
+
+crew_number = sum(titanic$crew)
+passenger_number = nrow(titanic) - crew_number
+
+crew_survived %>% 
+  summarise(crew_and_sur_prob = n()/nrow(titanic),
+            passe_and_surv_prob = nrow(passenger_survived)/nrow(titanic))
+
+passenger_survived %>% 
+  filter(survived == "yes", crew == FALSE) %>% 
+  summarise(crew_and_sur_prob = n()/nrow(titanic))
+  
+```
+
+
+
+```{r}
+
+
+
+```
+
+
+
+# 1.2 Probability Consolidation Questions
+Today was pretty full-on! Here are some problems to help you consolidate what you learned. Feel free to work on paper or in R, whichever you are most comfortable with:
+
+MVP - try four of the problems
+Extension - try more than four!
+
+
+## Question 1.
+If I roll a six-sided dice once, what is the probability of getting a number less than 5?
+
+Probability = 2/3 = 66.67%
+
+```{r}
+rolldie(1) %>% 
+  summarise(prob_less_than_5 = sum(X1<5)/n())
+
+```
+
+
+
+## Question 2.
+How many outcomes are there in the sample space of an experiment in which we toss three dice?
+
+Sample space = die_sides^3 = 6^3 = 216
+
+```{r}
+rolldie(3) %>% 
+  nrow()
+```
+
+
+# Question 3.
+In an experiment where we roll four dice:
+
+how many outcomes are in the event where the total of the four dice equals 5, 6 or 7)?
+what is the probability of this event?
+what assumptions do we apply in answering part ii?
+Hint
+For part i, rowSums(.) may help you setup up the necessary random variable total (or you can use pivot_longer())
+
+```{r}
+four_die_outcome <- rolldie(4) %>% 
+  filter(rowSums(.) %in% c(5, 6, 7))
+
+rolldie(4) %>% 
+  summarise(prob_of_roll = nrow(four_die_outcome) / n())
+
+# Assumptions applied is that all outcomes are as likely to happen as another.
+```
+
+
+
+# Question 4.
+Five chairs are placed in a row in a room, along with five people of differing height. The people sit down randomly on the chairs. What is the probability that they sit in order of decreasing height, left to right?
+
+Hint
+This is an arrangement where order matters. Of all the possible arrangements, how many are correct?
+
+>Num dist = N!/(N-r)! = 5!/(5 - 5)! = 120
+Correct order = 1 only
+Prob = 1/120 = 0.833%
+
+
+```{r}
+height <- c(175, 170, 185, 145, 160)
+
+height_order <- sort(height, TRUE)
+
+
+as_tibble(permutations(n = length(height), r = 5, v = height, 
+                       repeats.allowed =  FALSE
+          )) %>% 
+  unite("merged", 1:length(height), remove = FALSE) %>% 
+  summarise(probability = sum(str_c(height_order, collapse = "_") == merged)/n())
+  
+
+
+```
+
+
+
+Question 5.
+I roll six dice:
+
+what is the probability I see the numbers 6, 5, 4, 3, 2 and 1 in order on the dice, left to right?
+what is the probability I see one each of the numbers 6, 5, 4, 3, 2 and 1 on the dice regardless of order?
+Hint
+Have a look at the isin() function in the prob package. For example, to filter all rows containing 6, 1, 2 in that order, you could use isin(., c(6, 1, 2), ordered = TRUE)
+
+>1- Permutation
+num_dist = N!/r!(N-r)!= (6)!/6!(6 - 6)! = 1 => probability = 1/6^6= 2.14e-3%
+
+
+
+```{r}
+dice_output <- c(6, 5, 4, 3, 2, 1)
+
+rolldie(6) %>% 
+   unite("merged", 1:6, remove = FALSE) %>% 
+  summarise(probability = sum(str_c(dice_output, collapse = "_") == merged)/n())
+  
+sum(isin(rolldie(6), dice_output, ordered = TRUE))/nrow(rolldie(6))
+```
+
+
+
+>2- num_dist = N!/(N-r)!= (6)!/(6 - 6)! => probability = 720/6^6 = 1.54%
+
+```{r}
+permute <- as_tibble(permutations(6, 6, v = 1:6)) %>% 
+  unite("permutation_list", 1:6, remove =TRUE)
+
+rolldie(6) %>% 
+  unite("merged", 1:6, remove = FALSE) %>% 
+  filter(merged %in% permute$permutation_list) %>% 
+  summarise(probability = n()/nrow(rolldie(6)))
+  
+
+sum(isin(rolldie(6), dice_output))/nrow(rolldie(6))
+```
+
+
+
+Question 6.
+If I draw a single card from a 52-card deck, and it is black, what is the probability that its suit is spades?
+
+Hints
+Investigate the cards() function in the prob package, if you’d like to try this in R (make a deck without jokers).
+You could think about adding your own black_card random variable to the sample space, which would be TRUE if the suit is ‘Spade’ or ‘Club’, and FALSE otherwise.
+
+Pr(spade | black)
+
+No. black cards = 26, N of spades = 13,
+
+50% chance
+
+```{r}
+black_cards <- cards(jokers = FALSE) %>% 
+  filter(suit == "Club" | suit == "Spade")
+
+cards(jokers = FALSE) %>% 
+  filter(suit == "Spade") %>% 
+  summarise(prob_of_spade = n()/nrow(black_cards))
+```
+
