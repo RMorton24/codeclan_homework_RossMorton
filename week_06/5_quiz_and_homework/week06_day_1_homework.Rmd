@@ -21,6 +21,8 @@ titanic <- titanic %>%
     str_detect(class, "crew|staff") ~ TRUE,
     TRUE ~ FALSE))
 ```
+
+
 ```{r}
 crew_survived <- titanic %>%
   filter(survived == "yes", crew == TRUE)
@@ -32,12 +34,12 @@ crew_number = sum(titanic$crew)
 passenger_number = nrow(titanic) - crew_number
 
 crew_survived %>% 
-  summarise(crew_and_sur_prob = n()/nrow(titanic),
-            passe_and_surv_prob = nrow(passenger_survived)/nrow(titanic))
+  summarise(crew_and_sur_prob = n()/crew_number,
+            passe_and_surv_prob = nrow(passenger_survived)/passenger_number)
 
-passenger_survived %>% 
-  filter(survived == "yes", crew == FALSE) %>% 
-  summarise(crew_and_sur_prob = n()/nrow(titanic))
+# passenger_survived %>% 
+#   filter(survived == "yes", crew == FALSE) %>% 
+#   summarise(crew_and_sur_prob = n()/nrow(titanic))
   
 ```
 
