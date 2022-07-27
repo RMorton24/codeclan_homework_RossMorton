@@ -1,0 +1,177 @@
+---
+title: "Week 6 Day 2 Homework"
+output: html_notebook
+---
+
+
+```{r}
+library(janitor)
+library(prob)
+library(skimr)
+library(e1071)
+library(tidyverse)
+```
+
+# 1 MVP
+## Question 1.
+Load the data, clean_names() and explore it.
+
+```{r}
+shopping <- read_csv("data/20190928-items.csv") %>% 
+  clean_names()
+```
+
+```{r}
+glimpse(shopping)
+```
+
+
+
+## Question 2.
+Find the brand with the highest numbers of phones in the dataset.
+
+### Thoughts
+Group the brand, then summarise the number phones,
+
+### Discussion and code
+There are duplicate "Titles" but will treat "asin" as the primary of determining
+whether the phones are individual or not.
+```{r}
+shopping %>% 
+  group_by(brand) %>% 
+  summarise(num_phone = n()) %>% 
+  slice_max(num_phone,n = 1)
+```
+```{r}
+shopping %>%
+  group_by(title) %>% 
+  mutate(n = n()) %>% 
+  arrange(desc(n))
+```
+
+
+
+##Question 3.
+For your top brand, plot the distribution of phone ratings as a probability density, overlaying a fitted normal distribution. Do you think the normal distribution provides a good model of these ratings?
+Hint
+You will need to calculate the mean() and sd() of the ratings to plot the appropriate normal distribution. Alternatively, investigate using the fitdistr() function in the MASS package]
+
+
+### Thoughts
+Filter the data for samsung, then create a plot with a histogram.
+Add the distribution curve using stat_func and dnorm
+
+### Discussion and code
+
+The distribution with the histogram shows that the data is skewed to the left
+due to the possible outlier with low ratings. The distribution curve has been
+shifted slightly due to these values. Overall is is the fit is ok as this covers
+the large increase around 3.5.
+
+
+```{r}
+samsung_phones <- shopping %>% 
+  filter(brand == "Samsung")
+
+samsung_phones %>% 
+  ggplot(aes(x = rating)) +
+  geom_histogram(aes(y = ..density..), col = "White") +
+  stat_function(fun = dnorm,
+                args = list(mean = mean(samsung_phones$rating),
+                            sd = sd(samsung_phones$rating)),
+                colour = "blue") +
+  theme_classic()
+```
+
+
+
+##Question 4.
+We can be more quantitative in comparing the distribution of top brand ratings with a normal distribution. You calculated the mean() and sd() of your distribution in an earlier question. Use these values to calculate the proportions of ratings within one-, two- and three standard deviations of the mean. Compare these proportions with those you expect for a normal distribution.
+
+Hint
+You can use a filter() to get only the ratings within one-, two- and three standard deviations of the mean, and then think about how to calculate what proportion each of these filtered sets make of the total number of ratings. You’ll need to use three separate filter() and summarise() pipes to do this.
+Further hint - code to filter within one SD
+Here’s the code to filter and summarise the proportion of ratings within one standard deviation of the mean.
+
+samsung_ratings %>%
+  filter(rating >= samsung_stats$mean - samsung_stats$sd) %>%
+  filter(rating <= samsung_stats$mean + samsung_stats$sd) %>%
+  summarise(prop_within_1sd = n() / nrow(samsung_ratings))
+```{r}
+samsung_phones %>%
+  filter(rating >= samsung_mean - 3*samsung_sd) %>%
+  filter(rating <= samsung_mean + 3*samsung_sd) %>%
+  summarise(prop_within_1sd = n() / nrow(samsung_phones))
+```
+
+
+### Thoughts
+Re-calculate the mean and sd. Create a field with standardised variable (z) and
+then used this to determine whether the number is within 1 sd, 2sd , 3sd. This
+can then be grouped and a prob of being in each group then using a cumulative 
+sum.
+
+### Discussion and code
+
+The first standard deviation has about 80% of the data and increases to ~98%
+for values with 3 standard deviations. The values show that the data is 
+reasonable concentrated together for the samsung phone ratings.
+
+```{r}
+samsung_mean <- mean(samsung_phones$rating)
+samsung_sd <- sd(samsung_phones$rating)
+
+samsung_phones %>% 
+  mutate(std_variable = (rating - samsung_mean)/samsung_sd) %>% 
+  mutate(std_level = case_when(
+    abs(std_variable) <= 1 ~ "one_st_dev",
+    abs(std_variable) > 1 & abs(std_variable) <= 2  ~ "two_st_dev",
+    abs(std_variable) < 3 ~ "three_st_dev",
+    TRUE ~ "over_three_st_dev"
+  )) %>% 
+  group_by(std_level) %>% 
+  summarise(prob_within = n()/nrow(samsung_phones)) %>% 
+  arrange(desc(prob_within)) %>% 
+  mutate(prob_within = cumsum(prob_within))
+  
+```
+
+
+# 2 Extension
+
+Investigate the use of the qqnorm() plot in R to determine whether data is normally distributed. What is a ‘quantile-quantile plot’? What do we expect to see in a qqnorm() plot if data is nearly normally distributed?
+
+
+## Discussion and code
+
+A QQ plot is plots twos sets of quantiles against one another. The plot should 
+form a relatively straight line but this will depend on the theoretical function
+used to determine compare eg. a normal distribution curve, a skewed right, or
+"fat" tails etc.
+
+Below is the data plotted against a theoretical normal curve. This shows that 
+the data is follows relatively closely to the data with the exception of values 
+at the 2nd quartiles and above. Therefore the data is not close to a normal
+distribution but will contain "fat"/heavy tails
+
+```{r}
+qqnorm(samsung_phones$rating)
+qqline(samsung_phones$rating, col = "blue", lwd = 2)
+
+```
+
+Plot the data with a Cauchy distribution plot. This shows that this does not
+quite along at the tails either and may not have as severe "tails".
+
+```{r}
+qqplot(y = samsung_phones$rating, 
+       x = qcauchy(ppoints(100)))
+qqline(samsung_phones$rating, distribution = qcauchy)
+```
+
+
+```{r}
+
+
+```
+
