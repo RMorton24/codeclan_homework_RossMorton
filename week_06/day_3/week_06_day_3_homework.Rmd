@@ -1,0 +1,224 @@
+---
+title: "Week 6 Day 3 Homework"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+library(janitor)
+library(infer)
+library(fastGraph)
+```
+
+# Task 1.
+Load the data again, clean_names(), and re-familiarise yourself with it
+
+```{r}
+ames <- read_csv(here::here("data/ames.csv")) %>% 
+  clean_names()
+```
+```{r}
+glimpse(ames)
+```
+
+
+# Task 2.
+Investigate the distribution of lot_area. Is the distribution roughly normal? If not, what problems do you find?
+
+## Thoughts
+Create a histogram of the data
+
+## Code and discussion
+
+The histogram plot of the entire data shows the data is heavily right skewed. 
+If we filter out some of the data we can see a better distribution and that values
+are concentrated around 1000. The data set has a large range and that a large 
+number exceed the 1.5IQR.
+
+```{r}
+ames %>% 
+  ggplot(aes(x = lot_area)) +
+  geom_histogram()
+
+ames %>% 
+  ggplot(aes(x = lot_area)) +
+  geom_boxplot()
+
+ames %>% 
+  filter(lot_area < 50000) %>% 
+  ggplot(aes(x = lot_area)) +
+  geom_histogram()
+```
+
+
+
+# Task 3.
+Compute and visualise a bootstrap sampling distribution for the mean(lot_area) of the sold houses.
+
+## Thoughts
+Create a bootstrap re-sampling of the ames data since this is not the "sample.
+and calculate the mean of the lot.
+
+## Discussion and code
+
+```{r}
+bootstrap_sample_creation <- function(.data, rep_num){
+  .data %>% 
+  specify(response = lot_area) %>% 
+  generate(reps = rep_num, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+} 
+  
+```
+
+
+```{r}
+reps <- 5000
+
+bootstrap_sample <- ames %>% 
+  bootstrap_sample_creation(reps)
+```
+
+
+# Task 4.
+Use your bootstrap distribution to calculate a 95% CI for mean(lot_area), and visualise it on the distribution
+
+
+## Thoughts
+Obtain the confidence intervals using the get_ci(), then apply this to the
+histogram of the bootstrap sample. The CI seems to apply cover the most of the
+theoretical mean of the overall population based on our sample set. The distribution
+of the theoretical mean is fairly normalised.
+
+```{r}
+sample_ci_95 <- bootstrap_sample %>%
+  get_ci(level = 0.95, type = "percentile")
+
+sample_ci_95
+```
+
+
+```{r}
+bootstrap_sample %>% 
+  visualise(bins = 15) +
+  shade_ci(endpoints = sample_ci_95)
+  # stat_function(
+  #    fun = dnorm,
+  #    args = list(
+  #      mean = mean(bootstrap_sample$stat),
+  #      sd = sd(bootstrap_sample$stat)
+  #    ),
+  #    colour = "red" 
+  #  )
+
+```
+
+
+## Task 5.
+You would like to know the mean(lot_area) of the sold houses with higher confidence. Calculate the 99% CI for this variable (you can re-use your bootstrap distribution from above). Is it narrower or broader than the 95% CI? Does that make sense?
+
+## Thoughts
+For more conidence in the mean we will need to enlarge the confidence interval
+width. Complete this similar to above but modify for 99%.
+
+
+## Discussion and code
+As expected, the width has increased to accomodate a large confidence.
+
+
+```{r}
+sample_ci_99 <- bootstrap_sample %>%
+  get_ci(level = 0.99, type = "percentile")
+
+bind_rows("CI_95" = sample_ci_95, "CI_99" = sample_ci_99, .id = "groups") %>% 
+  mutate(width = upper_ci - lower_ci)
+```
+
+```{r}
+bootstrap_sample %>% 
+  visualise(bins = 15) +
+  shade_ci(endpoints = sample_ci_99)
+```
+
+
+##Task 6.
+Calculate the point estimate of the mean(lot_area)
+
+## Thoughts
+Generate the standard deviation of the bootstrap mean.
+
+## Discussion and code
+
+The point estimate for the sample generates is as shown below. This provides
+the standard error for the theoretical mean obtained.
+
+```{r}
+bootstrap_sample %>% 
+  summarise(point_estimate = sd(stat),
+            mean = mean(stat))
+```
+
+
+# 2 Extension
+
+
+# Task 1.
+Calculate a point estimate and 95% CI for the proportion of houses in the data built before 1920. Does the number of reps you use matter? [Investigate reps from 200 up to 50000, memory of your laptop permitting].
+
+## Thoughts
+
+Create a loop which generates a a variation in the "reps" from 200 to 50000. The
+data will need to be filtered first before applying to this.
+
+
+## Discussion and code
+
+```{r}
+ames_before_1920 <- ames %>% 
+  filter(year_built <= 1920)
+```
+
+```{r}
+reps = seq(200, 50000, 100)
+
+point_estimate_vector <- vector("numeric", length = length(reps))
+
+##lapply()??
+
+for (rep_loop in 1:length(reps)){
+  
+  point_estimate_vector[rep_loop] <- ames_before_1920 %>% 
+    boostrap_sample_creation(rep_num = rep_loop) %>% 
+    summarise(sd = sd(stat)) %>% 
+    pull(sd)
+    
+  #print(paste(rep_loop, point_estimate_vector[rep_loop]))
+  
+}
+
+point_estimate_tibble = tibble(
+  rep_number = reps,
+  point_estimate = point_estimate_vector
+)
+
+
+
+# ames_before_1920 %>% 
+#     boostrap_sample_creation(rep_num = 200) %>% 
+#     summarise(sd = sd(stat)) %>% 
+#     pull(sd)
+```
+
+
+```{r}
+point_estimate_tibble %>% 
+  ggplot(aes(x = rep_number, y = point_estimate)) +
+  geom_point() +
+  theme_classic() +
+  labs(x = "Number of reps",
+       y = "Point Estimate",
+       title = "Effect of the number of reps on the Point Estimate")
+```
+
+From the plots of spread of the point estimate becomes smaller the greater
+the number of reps that are used. 
