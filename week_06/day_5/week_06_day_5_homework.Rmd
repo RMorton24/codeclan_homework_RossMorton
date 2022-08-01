@@ -1,0 +1,359 @@
+---
+title: "Week 6 Day 5 Homework"
+output: html_notebook
+---
+
+
+Hypothesis tests & probability - homework
+1 MVP
+
+1.1 Hypothesis testing - practical
+You work for an animal conservation organisation and are looking to do some investigating into some of the animals to provide evidence for some projects you are looking to run.
+
+
+In this homework we’ll use the msleep data set provided in the ggplot package. It concerns the sleeping patterns of various types of mammal.
+
+
+```{r}
+library(tidyverse)
+library(infer)
+data(msleep)
+```
+
+
+# Question 1.
+Explore the dataset and familiarise yourself with it.
+
+
+```{r}
+glimpse(msleep)
+```
+
+
+
+# Question 2.
+Jabberwockies sleep for around 7 hours a night, on average. Perform an appropriate statistical test to determine whether the mean sleep_total in the sampled population of animal types differs from the typical value for jabberwockies.
+
+## Hypothesis
+
+Quesion - Does the mean sleep of the msleep data differ from the mean sleep of Jabberwockies
+H0: Mean sleep (Jabberwockies) = Mean sleep (msleep data)
+H1: Mean sleep (jabberworkcies) =/= Mean sleep (msleep data)
+alpha= 0.05
+
+```{r}
+msleep %>% 
+  ggplot(aes(x = sleep_total)) +
+  geom_histogram(bins = 20)
+```
+
+
+```{r}
+null_dist_jabber <- msleep %>% 
+  specify(response = sleep_total) %>% 
+  hypothesise(null = "point", mu = 7) %>% 
+  generate(reps = 10000, type = "bootstrap") %>% 
+  calculate(stat = "mean")
+```
+
+```{r}
+#observed_mean_sleep <- mean(msleep$sleep_total)
+
+observered_mean_sleep <- msleep %>% 
+  specify(response = sleep_total) %>% 
+  calculate(stat = "mean")
+
+null_dist_jabber %>% 
+  visualise() +
+  shade_p_value(observed_mean_sleep, direction = "both")
+```
+
+```{r}
+null_dist_jabber %>% 
+  get_p_value(observed_mean_sleep, "both")
+```
+
+## Discussion
+
+The p-value is lower than the threshold of 0.05. Therefore we will reject the
+null hypothesis and concluse that the mean sleep in for the animals in the data 
+is different from that of jaberwockies.
+
+
+
+
+# Question 3.
+Perform an appropriate statistical test to determine whether omnivores sleep for significantly longer than herbivores, on average.
+
+## Thoughts/hypothesis
+Quesion - Do omnivores sleep for longer than herbivores on average?
+H0: mean sleep (omnivores) - mean sleep (herbivores) = 0
+H1: mean sleep (omnivores) - mean sleep (herbivores) > 0
+alpha = 0.05
+
+```{r}
+msleep %>% 
+  filter(vore == "herbi" | vore == "omni") %>% 
+  ggplot(aes(x = sleep_total, fill = vore)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~vore, nrow = 2)
+```
+
+```{r}
+null_dist_omni <- msleep %>% 
+  filter(vore == "herbi" | vore == "omni") %>% 
+  specify(sleep_total ~ vore) %>% 
+  hypothesise(null = "independence") %>% 
+  generate(reps = 10000,type = "permute") %>% 
+  calculate(stat = "diff in means", order = c("omni", "herbi"))
+
+observed_omni <- msleep %>% 
+  filter(vore == "herbi" | vore == "omni") %>% 
+  specify(sleep_total ~ vore) %>% 
+  calculate(stat = "diff in means", order = c("omni", "herbi"))
+```
+
+
+```{r}
+null_dist_omni %>% 
+  visualise() +
+  shade_p_value(obs_stat = observed_omni, direction = "right")
+```
+```{r}
+null_dist_omni %>% 
+  get_p_value(obs_stat = observed_omni, direction = "right")
+```
+
+## Discussion
+Initially from the histogram plot, the two data sets overlapped. Therefore is was
+expected that the sleep would be similar between omnivores and herbivores.
+
+The p-value (0.122) is greater than the threshold of 0.05. Therefore we lack 
+the sufficient evidence and fail to reject the null hypothesis that omnivores
+on average sleep longer than herbivores.
+
+
+#Question 4. 
+Perform an appropriate statistical test to determine whether the proportion of 
+domesticated animal types in the population of animal types is greater than 5%
+Think about creating an is_domesticated variable for the analysis
+
+## Hypothesis
+
+question: Do the proportion of domesticated animals in animal types exceed 5%?
+H0: pi(domesticated) = 5%
+H1: pi(domesticated) > 5%
+
+alpha = 0.05
+
+```{r}
+msleep_dom <- msleep %>% 
+  mutate(is_domesticated = conservation == "domesticated") %>% 
+  filter(!is.na(is_domesticated))
+```
+
+
+```{r}
+obs_domesticated <- msleep_dom %>% 
+  specify(response = is_domesticated, success = "TRUE") %>% 
+  calculate(stat = "prop")
+
+null_dist_dom <- msleep_dom %>% 
+  specify(response = is_domesticated, success = "TRUE") %>% 
+  hypothesise(null = "point", p = 0.05) %>%
+  generate(reps = 10000, type = "draw") %>% 
+  calculate(stat = "prop")
+```
+
+
+
+```{r}
+null_dist_dom %>% 
+  visualise(bins = 10) +
+  shade_p_value(obs_stat = obs_domesticated, direction = "greater")
+```
+
+```{r}
+null_dist_dom %>% 
+  get_p_value(obs_stat = obs_domesticated, direction = "greater")
+```
+
+## Discussion
+The p-value of 2e-4 is less than the threshold of 0.05. Therefore the the null
+hypothesis is rejected. A conclusion that over 5% of the animal types are
+domesticated can therefore be drawn. It should be noted however that within the
+data set, there are 29 occurances (out of 83) which have an NA and have been
+ommitted.
+
+
+
+
+1.2 Hypothesis testing - Defining the Hypothesis
+For the following three business problems write out:
+
+What kind of test you would use
+H0 and Ha in both mathematical notation and in words.
+Also state the method you would use to generate the null distribution (bootstrap, permutation or simulation).
+
+
+# Question 1.
+You work for a independent coffee shop. The boss tells you that she thinks that around 40% of people in the town (population 30,000) know of the coffee shop, but you are skeptical of the estimate. You conduct a random survey of 200 people in the town, asking if respondents are aware of your coffee shop. You want to use the sample to test the hypothesis that 40% or more of the town’s population have heard of the coffee shop.
+
+
+Question - Have 40% of the town heard of the coffee shop?
+
+Test - One sample Point test with 0.4 of proportion.
+
+Method for null distribution - bootstrap
+
+HO: At least 40% of the town population have heard of the shop
+$$
+H_0: \pi_{heard}=0.4
+$$
+
+H1: Less than 40% of the town population have heard of the shop
+$$
+H_1: \pi_{heard}<0.4
+$$
+
+
+
+# Question 2.
+You work for a website design company and have performed an A/B test on the position of a banner on a website promoting a particular item.
+You selected five days at random last month and then randomly selected 200 of each sampled day’s users into group A and another 200 of that day’s users into group B. Group A continued to be shown the banner at the right hand side of the webpage (its usual position) while group B was shown the banner at the top of the page. You monitored each sampled user’s interactions with the website, in particular the ‘click through rate’ (CTR) on the banner, i.e. what proportion of sampled users clicked on the banner. You want to use the sampled data to test the hypothesis that website users overall are more likely to click on the banner if positioned at the top of the page
+
+
+
+Question -
+Do the users click on the banner positioned at the top (group B) "significantly" more than on the right hand size (group A)?
+
+Hypothesis:
+
+Ho: Difference in Proportion of click through in Group A to Group B equals 0.
+$$
+H_0:   \pi_A - \pi_B= 0
+$$
+H1: Difference in Proportion of click through in Group A to Group B is less than 0.
+$$
+H_1:   \pi_A - \pi_B < 0
+$$
+Method and test:
+Null = Independence, permute with difference in proportions.
+
+
+
+#Question 3.
+You work as an analyst for a car manufacturing company - they have specific standards they must meet for standards and regulation purposes. You have been asked to check the quality control of the manufacture of a particular car part. You have been given data on a sample of 200 parts produced over the period of a week (the sampled parts were pulled at random from the production line and measured: the factory produced a lot more than 200 parts that week). The specification of the part stipulates a width of 145mm, and the manufacturing process is said to have ‘drifted’ if the mean width of parts differs significantly from 145mm. You want to use the sampled measurements to test whether the process overall has drifted.
+
+Question- 
+Have the components drifted from the nominal size of 145mm?
+
+HO: The components are equal to 145mm in length
+$$
+H_0 : \mu = 145mm
+$$
+
+H1: The components are not equal to 145mm
+
+$$
+H_0 : \mu \neq145mm
+$$
+
+1.3 Hypothesis Testing - Interpreting the results
+For the 3 business problems stated above, imagine we performed you got the following p-values (with the given significance levels) write out your interpretation of the results.
+
+
+
+# Question 1.
+
+Coffee shop problem. Significance level: 0.05, calculated p-value: 0.07
+
+The p-value exceeds the significance level. Therefore we fail to reject the 
+null hypothesis. Therefore we cannot conclude that less than 40% of the population
+know of the coffee shop.
+
+
+
+# Question 2.
+
+Website company problem. Significance level: 0.01, p-value: 0.006
+
+The p-value is within the significance level therefore we reject the null hypothesis.
+We can therefore concluse that group B is significantly more likely to click the
+banner.
+
+
+# Question 3.
+
+Manufacturing company problem. Significance level: 0.05, p-value: 0.55
+
+The p-value exceeds the significance level. Therefore we fail to reject the null
+hypothesis that the components have not drifted.
+
+
+
+# Extension
+
+```{r}
+library(tidyverse)
+library(janitor)
+transactions <- read_csv("data/online_retail_subset.csv") %>% 
+  clean_names()
+```
+
+For the first section we are interested in the purchase of two particular items:
+
+item A - ‘HEART OF WICKER SMALL’ (StockCode 22469)
+item B - ‘LARGE CAKE TOWEL PINK SPOTS’ (StockCode 21110)
+
+#Question 1.
+Calculate the support for item A (this will be the support for a single item)
+
+```{r}
+total_transactions <- length(unique(transactions$invoice_no))
+
+support_a <- transactions %>% 
+  summarise(sum(stock_code == "22469")/total_transactions) %>% 
+  pull()
+```
+
+#Question 2.
+Calculate the support and confidence for rule (A→B).
+
+```{r}
+support_a_b <- transactions %>% 
+  filter(stock_code %in% c("22469", "21110")) %>% 
+  select(invoice_no, stock_code) %>% 
+  group_by(invoice_no) %>% 
+  distinct() %>% 
+  summarise(both_items = n() == 2) %>% 
+  summarise(supp_a_b = sum(both_items)) %>% 
+  pull()
+  
+
+confidence_a_b <- support_a_b/support_a
+```
+
+
+#Question 3.
+Calculate the lift for (A→B)
+```{r}
+support_b <- transactions %>% 
+  summarise(sum(stock_code == "21110")/total_transactions) %>% 
+  pull()
+
+lift_a_b <- support_a_b/(support_a*support_b)
+
+lift_a_b
+```
+
+
+Hint
+You will need to calculate the support for B]
+
+
+```{r}
+library(arules)
+library(arulesViz)
+```
+
