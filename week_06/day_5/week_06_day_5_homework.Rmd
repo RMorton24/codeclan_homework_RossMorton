@@ -327,7 +327,7 @@ support_a_b <- transactions %>%
   group_by(invoice_no) %>% 
   distinct() %>% 
   summarise(both_items = n() == 2) %>% 
-  summarise(supp_a_b = sum(both_items)) %>% 
+  summarise(supp_a_b = sum(both_items)/total_transactions) %>% 
   pull()
   
 
