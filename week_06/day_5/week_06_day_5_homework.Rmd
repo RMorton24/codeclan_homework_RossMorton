@@ -65,7 +65,7 @@ observered_mean_sleep <- msleep %>%
 
 null_dist_jabber %>% 
   visualise() +
-  shade_p_value(observed_mean_sleep, direction = "both")
+  shade_p_value(observered_mean_sleep, direction = "both")
 ```
 
 ```{r}
