@@ -1,0 +1,138 @@
+---
+title: "Week 10 day 1 homework"
+output: html_notebook
+---
+
+# Load in Libraries
+```{r}
+library(tidyverse)
+library(modelr)
+library(ggfortify)
+library(broom)
+```
+
+# Load in data
+```{r}
+project_management <- read_csv(here::here("data/project_management.csv"))
+```
+```{r}
+head(project_management, 5)
+glimpse(project_management)
+```
+
+
+# MVP
+The file project_management.csv contains data sampled from the recent work schedule of a small construction company. Column estimated_length contains the estimated length of a building job in days, while column actual_length contains the actual recorded length of the job in days.
+
+We are interested in determining the accuracy of the job estimations made by the company using simple linear regression, so we will eventually want to run a simple linear regression using actual_length as the dependent variable, and estimated_length as the independent variable.
+
+
+## 1 Load the data into a dataframe project
+
+## 2 Plot the data, taking estimated_length as the independent variable and actual_length as the dependent variable.
+
+### Thoughts
+Create a scatter plot of the variables to compare one against another
+- x = estimated_length (independant), y = actual_length (dependant)
+
+### Code and discussion
+ 
+Plot looks as if there is a trend between but initial thoughts is that is looks
+more parabolic (greate change with larger estisimate) than linear. Primarily
+this is because of the value above 20. For linear trend it is expected to have
+a positive value for correlation.
+```{r}
+project_management %>% 
+  ggplot(aes(x = estimated_length, y = actual_length)) +
+  geom_point()
+```
+
+## 3 Calculate the correlation coefficient of estimated_length and actual_length and interpret the value you obtain.
+
+### Thoughts
+Use the cor function- expected value is positive with a good correlation value
+
+### Code and discussion
+
+Output shows a value of 0.8 which has a positive correlation between estimated_length
+and actual_legnth.
+```{r}
+project_management %>% 
+  summarise(cor(x = estimated_length, y = actual_length))
+```
+
+
+
+
+#Perform a simple linear regression using actual_length as the dependent variable, and estimated_length as the independent variable. Save the model object to a variable.
+
+## Thoughts
+Create a liner model using the `lm()` with actual_length being a function of 
+estimated_length.
+
+### Code and 
+
+```{r}
+model <- lm(formula = actual_length ~ estimated_length,
+            data = project_management)
+```
+
+
+#Interpret the regression coefficient of estimated_length (i.e. slope, gradient) you obtain from the model. How do you interpret the r2 value reported by the model?
+
+## Thoughts
+Use the glance/summary/tidy functions to determine the suitability
+
+## Code and discussion
+```{r}
+model %>% summary()
+model %>% tidy()
+model %>% glance()
+```
+The regression coefficient shows that a unit change of the estimate_length will
+provide a chanage of 1.223 for the actual_length. As per the correlation, 
+the gradient is positive.
+
+The r^2 value shows that the linear model is relatively poor for the data
+set as the value is 0.6475. The higher the value the better for this with
+approximately only 64.8% of the points fitting with the model.
+
+
+#Is the relationship statistically significant? Remember, to assess this you need to check the p-value of the regression coefficient (or slope/gradient). But you should first check the regression diagnostic plots to see if the p-value will be reliable (don’t worry about any outlier points you see in the diagnostic plots, we’ll return to them in the extension).
+
+## Thoughts
+Check the diagnostic plot. 
+If the regression is acceptable and the p-value can be use the following will 
+be visible:
+
+* Residual should be distributed around 0 (i.e. no trend with fitted values) 
+* the Q-Q plot should be a relatively straight line (normal distribution)
+* scale location should be ideally a straight line (no trend)
+
+```{r}
+model %>% autoplot()
+```
+The residuals show that there is a trend with the linear model. Initially
+there is an under prediction but this becomes an over prediction with
+a larger value of estimated_length.
+The Q-Q plot follows a linear trend with only a few points deviating at the tails.
+Therefore the data is deemed to be normally distributed.
+The scale-location plot shows an almost parabolic curve and is therefore showing
+that the linear model is not accurate for this dataset.
+
+The p-value of the estimate shows that there is a stastical significant relationship 
+between the extended_length and actual_length. However the linear model is not
+acceptable for use with this data set.
+
+The plot of the linear model and the data is shown below. As is demonstrated,
+the data is slightly underpredicted before being over predicted with a higher
+estimated_length
+
+```{r}
+project_management %>% 
+  add_predictions(model) %>% 
+  ggplot(aes(x = estimated_length, y = actual_length)) +
+  geom_point() +
+  geom_line(aes(y = pred))
+```
+
