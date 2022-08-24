@@ -1,0 +1,200 @@
+---
+title: "Week 10 Day 2 Homework"
+output: html_notebook
+---
+
+# Load in libraries
+```{r}
+library(tidyverse)
+library(janitor)
+library(mosaic)
+library(GGally)
+library(ggfortify)
+```
+
+# MVP
+
+
+## 1.
+Load the housing_prices.csv data set and undertake an initial exploration of the data. You will find details on the data set on the relevant Kaggle page
+
+```{r}
+housing_prices <- read_csv(here::here("data/housing_prices.csv"))
+```
+```{r}
+head(housing_prices, 5)
+glimpse(housing_prices)
+```
+
+
+
+##2
+We expect the total_rooms of houses to be strongly correlated with total_bedrooms. Use ggpairs() to investigate correlations between these two variables.
+
+### Thoughts
+Create the ggpairs for all only the total_rooms and total_bedrooms
+
+### Code
+```{r}
+housing_prices %>% 
+  select(total_rooms, total_bedrooms) %>% 
+  ggpairs(title  = "Total rooms and Total Bedrooms")
+```
+### Discussion
+From the output there appears to be a very strong positive relationship between
+the number of rooms and the total number of bedrooms.
+
+## 3
+So, we do find significant correlations. Let’s drop total_bedrooms from the dataset, and use only total_rooms going forward.
+
+```{r}
+housing_prices <-  housing_prices %>% 
+  select(-total_bedrooms)
+```
+
+
+
+## 4
+We are interested in developing a regression model for the median_house_value of a house in terms of the possible predictor variables in the dataset.
+Use ggpairs() to investigate correlations between median_house_value and the predictors (this may take a while to run, don’t worry, make coffee or something).
+
+### Thoughts
+Using the new data set, complete ggpairs for the entire data set.
+
+### Code
+
+```{r}
+pair_plot_all <- ggpairs(housing_prices,
+        title = "Housing Price Variable Relations",
+        progress = FALSE)
+
+print(pair_plot_all, progress = FALSE)
+```
+
+### Discussion
+For the median house value, the strongest correlation relationship is to the 
+median income with a positive relationship. All other incomes 
+
+
+
+
+## 4ii
+Perform further ggplot visualisations of any significant correlations you find.
+
+```{r}
+housing_prices %>% 
+  ggplot(aes(x = population, y = total_rooms)) +
+  geom_point()
+```
+
+
+
+##5
+Shortly we may try a regression model to fit the categorical predictor ocean_proximity. Investigate the level of ocean_proximity predictors. How many dummy variables do you expect to get from it?
+
+## Thouhgts
+View the categories stored within the ocean proximity variable.
+
+## Code
+
+```{r}
+housing_prices %>% 
+  select(ocean_proximity) %>% 
+  distinct()
+```
+## Discussion
+The number of dummy variables is n-1 and therefore the number which should be
+created is 4.
+
+
+## 6
+Start with simple linear regression. Regress median_house_value on median_income and check the regression diagnostics.
+
+## Thoughts
+Create a linear model with media house value and median income using lm(), then
+use autoplot to see the results. If acceptable review further information on
+the model using summary.
+
+## Code
+```{r}
+model_1 <- lm(median_house_value ~ median_income, data = housing_prices)
+```
+
+```{r}
+model_1
+```
+
+
+```{r}
+autoplot(model_1)
+```
+
+
+```{r}
+model_1 %>%  summary()
+```
+
+
+```{r}
+plotModel(model_1)
+```
+
+### Discussion
+The residuals are scattered around 0 and could be deemed acceptable, however
+there appears to be a trend in the residuals. The normality of the residuals
+is poor at the extremities.
+
+The p-value shows effect of income on the house value is statistically significant.
+The correlation coefficient shows that there is a reasonable positive correlation
+betweenincome and house value. The value within the model will change the house
+value by 39987 with 1 unit of income.
+
+## 7
+Add another predictor of your choice. Check your assumptions, diagnostics, and interpret the model.
+
+## Thoughts
+Add one of the variables to the model- will add the total_rooms since this would
+appear to have the next highest correlation based on the plots above.
+
+## Code
+
+```{r}
+model_2 <- lm(median_house_value ~ median_income * total_rooms, data = housing_prices)
+```
+
+```{r}
+autoplot(model_2)
+```
+```{r}
+model_2 %>% summary()
+```
+
+## Discussion
+The diagnostic plots have not changed greatly from the previous model with the
+exception of the outlier plot in the leverage has been reduced. The normaility 
+still shows to be slightly off of a normal distribution especially on the 
+upper tail. 
+The total room relation to the median income and the house value is statistically
+significant. The total rooms has a 0.6311 change on the gradient in the previous
+model and will be steeper. The total rooms will also shift the model down by
+-3 when all other variables are kept constant.
+
+
+```{r}
+coplot(median_house_value ~ median_income | total_rooms, rows = 1,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = 4)
+       },
+       data = housing_prices)
+```
+
+```{r}
+coplot(median_house_value ~ median_income | ocean_proximity, rows = 1,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = 4)
+       },
+       data = housing_prices)
+```
+
