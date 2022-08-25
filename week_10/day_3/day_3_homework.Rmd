@@ -68,7 +68,11 @@ kc_house %>%
 kings_county_house <- kc_house %>% 
   select(-c(date, id, zipcode, sqft_above), -contains("15")) %>% 
   mutate(yr_renovated = if_else(yr_renovated != 0, TRUE, FALSE),
-         grade = factor(grade),
+         grade = case_when(
+           grade <= 3 ~ "low",
+           grade <= 10 ~ "medium",
+           TRUE ~ "high"
+         ),
          condition = factor(condition),
          view = factor(view),
          waterfront = as.logical(waterfront))
@@ -181,7 +185,7 @@ resid_2 %>%
 
 
 ```{r}
-model_3_long_lat <- lm(log(price) ~ sqft_living + grade + lat*long,
+model_3_long_lat <- lm(log(price) ~ sqft_living + lat*long,
                        data = kings_county_house)
 
 summary(model_3_long_lat)
@@ -190,6 +194,6 @@ autoplot(model_3_long_lat)
 
 
 ```{r}
-anova(model_2_grade, model_3_long_lat)
+anova(model_2_lat, model_3_long_lat)
 ```
 
