@@ -177,7 +177,7 @@ resid_2 %>%
 
 
 ```{r}
-model_3_long_lat <- lm(price ~ log(sqft_living) + grade + lat*long,
+model_3_long_lat <- lm(log(price) ~ sqft_living + grade + lat*long,
                        data = kings_county_house)
 
 summary(model_3_long_lat)
