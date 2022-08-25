@@ -159,10 +159,14 @@ autoplot(model_2_lat)
 
 
 ```{r}
-model_2_grade <- lm(price ~ log(sqft_living) + grade,
+model_2_grade <- lm(log(price) ~ log(sqft_living) + grade,
                   data = kings_county_house)
 
 summary(model_2_grade)
+```
+
+```{r}
+anova(model_1_sqftliv, model_2_grade)
 ```
 
 
@@ -184,4 +188,8 @@ summary(model_3_long_lat)
 autoplot(model_3_long_lat)
 ```
 
+
+```{r}
+anova(model_2_grade, model_3_long_lat)
+```
 
