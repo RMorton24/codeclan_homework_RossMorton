@@ -1,8 +1,4 @@
 ---
-title: "R Notebook"
-output: html_notebook
----
----
 title: "Week 10 Day 5 - Homework"
 output: html_notebook
 ---
