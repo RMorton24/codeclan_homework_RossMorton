@@ -1,0 +1,344 @@
+---
+title: "Week 10 Day 5 - Homework"
+output: html_notebook
+---
+
+
+# Data Dictionary
+
+index
+Date: The date of the observation
+AveragePrice: the average price of a single avocado
+Total Volume: Total number of avocados sold
+4046: Total number of avocados with PLU 4046 sold
+4225: Total number of avocados with PLU 4225 sold
+4770: Total number of avocados with PLU 4770 sold
+Total Bags
+Small Bags
+Large Bags
+XLarge Bags
+type: conventional or organic
+year: the year
+region: the city or region of the observation
+
+
+#1 MVP
+We’ve looked at a few different ways in which we can build models this week, including how to prepare them properly. This weekend we’ll build a multiple linear regression model on a dataset which will need some preparation. The data can be found in the data folder, along with a data dictionary
+
+We want to investigate the avocado dataset, and, in particular, to model the AveragePrice of the avocados. Use the tools we’ve worked with this week in order to prepare your dataset and find appropriate predictors. Once you’ve built your model use the validation techniques discussed on Wednesday to evaluate it. Feel free to focus either on building an explanatory or a predictive model, or both if you are feeling energetic!
+
+As part of the MVP we want you not to just run the code but also have a go at interpreting the results and write your thinking in comments in your script.
+
+Hints and tips
+
+region may lead to many dummy variables. Think carefully about whether to include this variable or not (there is no one ‘right’ answer to this!)
+Think about whether each variable is categorical or numerical. If categorical, make sure that the variable is represented as a factor.
+We will not treat this data as a time series, so Date will not be needed in your models, but can you extract any useful features out of Date before you discard it?
+If you want to build a predictive model, consider using either leaps or glmulti to help with this.
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(ggfortify)
+library(lubridate)
+library(modelr)
+```
+
+
+```{r}
+avocado <- read_csv(here::here("avocado.csv")) %>% 
+  janitor::clean_names()
+```
+
+# Data Exploration
+
+```{r}
+skimr::skim(avocado)
+```
+```{r}
+head(avocado, 5)
+```
+```{r}
+avocado %>% 
+  ggplot(aes(average_price)) +
+  geom_histogram()
+```
+
+
+Average price looks as if it right skewed and so taking a logarithmic could
+help to create a slighly more normalised data set.
+
+```{r}
+avocado %>% 
+  ggplot(aes(x = log(average_price))) +
+  geom_histogram()
+```
+
+
+
+Check for the unique values in each
+```{r}
+avocado %>% 
+  summarise(across(everything(), .fns = ~length(unique(.x))))
+```
+
+```{r}
+avocado %>% 
+  mutate(across(.fns = ~replace(., duplicated(.), NA)))
+```
+
+
+Check to see if there are aliases within the data set.
+
+```{r}
+alias(average_price ~ ., data = avocado)
+```
+
+Whilst this did no appear in the above. Total bags is the summation of small, 
+large and xl bags and so will be removed from the data set.
+
+```{r}
+avocado %>% 
+  mutate(check = total_bags - small_bags - large_bags - x_large_bags) %>% 
+  slice_max(check,n=5)
+```
+
+```{r}
+# Does not appear that total volume is related to the x4* numbers
+avocado %>% 
+  mutate(check = total_volume - x4046 - x4225 - x4770) %>% 
+  select(check, total_volume, contains("x4"))
+```
+
+
+```{r}
+avocado %>% 
+  distinct(region)
+```
+
+```{r}
+avocado %>% 
+  distinct(type)
+```
+
+
+# Data Engineering
+
+```{r}
+avocado_tidy <- avocado %>% 
+  mutate(month = month(date, label = TRUE),
+         year = as.factor(year)) %>% 
+  select(-c(x1,date, total_bags, region)) %>% 
+  rename_with(~str_replace(.x, "x4", "plu_4"))
+```
+
+## Split in to training and validation
+
+```{r}
+test_index <- sample(1:nrow(avocado_tidy), size = nrow(avocado_tidy)*0.1)
+
+avocado_train <- slice(avocado_tidy, -test_index)
+avocado_test <- slice(avocado_tidy, test_index)
+```
+
+
+# Manual Model Creation
+Function for easier plots later:
+
+```{r}
+ggpairs_plots <- function(data, main_columns){
+  data %>% 
+    select(where(is.numeric), main_columns, type) %>% 
+    ggpairs(aes(colour = type), progress = FALSE) %>% 
+    print()
+  
+  data %>% 
+    select(-where(is.numeric), main_columns ,type) %>% 
+    ggpairs(aes(colour = type), progress = FALSE) %>% 
+    print()
+}
+```
+
+
+Review the correlation of variables. From the initial look, there does not appear
+to be any clear correlation between average price and any of the other variables
+
+```{r}
+avocado_train %>% 
+  ggcorr(label = TRUE)
+
+avocado_train %>% 
+  filter(type == "organic") %>% 
+  ggcorr(label = TRUE)
+
+avocado_train %>% 
+  filter(type != "organic") %>%
+  ggcorr(label = TRUE)
+```
+
+
+
+
+```{r message=FALSE}
+avocado_train %>% 
+  ggpairs_plots(c("average_price"))
+```
+
+
+
+## Model 1
+
+From the ggpairs plots the type has a large effect on the average price. The
+month also has an affect
+
+### Type
+
+```{r}
+model_1_type <- lm(average_price ~ type,
+                   data = avocado_train)
+
+summary(model_1_type)
+autoplot(model_1_type)
+```
+
+```{r}
+model_1_type_log <- lm(log(average_price) ~ type,
+                   data = avocado_train)
+
+summary(model_1_type_log)
+autoplot(model_1_type_log)
+```
+
+
+#### Discussion
+The model with type seems to be statistically significant. The organic type
+will increase the average price by 0.495.
+
+
+### total_volume
+```{r}
+model_1_tot_vol <- lm(average_price ~ total_volume,
+                   data = avocado_train)
+
+summary(model_1_tot_vol)
+autoplot(model_1_tot_vol)
+```
+
+
+#### Discussion
+Whilst the values are significant the r2 is lower than the type. There is also
+a large deviation in the residuals. The first group is no around 0, where the
+second group is mainly over presidcted.
+
+
+### plu 4046
+
+```{r}
+model_1_plu4046 <- lm(average_price ~ plu_4046,
+                   data = avocado_train)
+
+summary(model_1_tot_vol)
+autoplot(model_1_tot_vol)
+```
+
+
+#### Discussion
+As per the total volume, the there is siginificance of plu_4046 bein in the model
+however, the r2 is currently low. Thereofre this will not be accepted at this time
+since the reidual plots are not acceptable.
+
+
+> Model 1 champion = type
+
+
+## Model 2
+
+```{r}
+avocado_train %>% 
+  add_residuals(model_1_type) %>% 
+  ggpairs_plots(c("average_price","resid"))
+
+```
+
+
+### month
+
+```{r}
+model_2_month <- lm(average_price ~ type + month,
+                   data = avocado_train)
+summary(model_2_month)
+autoplot(model_2_month)
+```
+
+```{r}
+model_2_year <- lm(average_price ~ type + year,
+                   data = avocado_train)
+summary(model_2_year)
+autoplot(model_2_year)
+```
+
+```{r}
+model_2_total_volume <- lm(average_price ~ type + total_volume,
+                   data = avocado_train)
+summary(model_2_month)
+autoplot(model_2_month)
+```
+
+
+
+
+# Automated model
+
+
+```{r}
+library(leaps)
+```
+
+
+```{r}
+auto_avocado_forward <- regsubsets(average_price ~ ., 
+                                   data = avocado_train,
+                                   method = "forward")
+```
+
+
+
+## glmulti
+```{r}
+library(glmulti)
+```
+```{r eval=FALSE}
+glmulti_model <- glmulti(
+    average_price ~ ., 
+  data = avocado_train,
+  level = 2, # 2 = include pairwise interactions, 1 = main effects only (main effect = no pairwise interactions)
+  minsize = 0, # no min size of model
+  maxsize = -1, # -1 = no max size of model
+  marginality = TRUE, # marginality here means the same as 'strongly hierarchical' interactions, i.e. include pairwise interactions only if both predictors present in the model as main effects.
+  method = "g", # the problem is too large for exhaustive search, so search using a genetic algorithm
+  crit = bic, # criteria for model selection is BIC value (lower is better)
+  plotty = FALSE, # don't plot models as function runs
+  report = TRUE, # do produce reports as function runs
+  confsetsize = 100, # return best 100 solutions
+  fitfunction = lm # fit using the `lm` function
+)
+```
+
+
+
+After 980 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+x_large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+x_large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4073.78480292395 
+Change in best IC: 0 / Change in mean IC: 0
+
+After 990 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+x_large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+x_large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4073.78480292395
+Improvements in best and average IC have bebingo en below the specified goals.
+Algorithm is declared to have converged.
+Completed.
+
+
+

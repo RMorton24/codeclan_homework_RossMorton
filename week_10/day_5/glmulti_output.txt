@@ -1,0 +1,607 @@
+
+Show in New Window
+Loading required package: rJava
+Show in New Window
+Initialization...
+TASK: Genetic algorithm in the candidate set.
+Initialization...
+Algorithm started...
+
+After 10 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4046:total_volume+plu_4770:total_volume+small_bags:total_volume+small_bags:plu_4046+small_bags:plu_4225+small_bags:plu_4770+large_bags:plu_4046+large_bags:plu_4770+plu__large_bags:plu_4046+plu__large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4225+type:small_bags+year:plu__large_bags+year:type+month:large_bags+month:plu__large_bags
+Crit= 4288.21490794362
+Mean crit= 5265.90419098635
+Change in best IC: -5711.78509205638 / Change in mean IC: -4734.09580901365
+
+After 20 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+small_bags:plu_4770+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4225+type:plu_4770+type:small_bags+year:plu__large_bags+year:type+month:large_bags+month:plu__large_bags
+Crit= 4222.96790810452
+Mean crit= 4962.90556609745
+Change in best IC: -65.2469998391007 / Change in mean IC: -302.998624888895
+
+After 30 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+small_bags:plu_4770+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu__large_bags+year:type+month:plu__large_bags
+Crit= 4125.39085859585
+Mean crit= 4773.53465387994
+Change in best IC: -97.577049508669 / Change in mean IC: -189.370912217517
+
+After 40 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:type
+Crit= 3985.50966583782
+Mean crit= 4638.33372579871
+Change in best IC: -139.881192758027 / Change in mean IC: -135.200928081228
+
+After 50 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4578.05201101554
+Change in best IC: -50.6903863802177 / Change in mean IC: -60.2817147831684
+
+After 60 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4529.99878149138
+Change in best IC: 0 / Change in mean IC: -48.0532295241564
+
+After 70 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4445.61612374939
+Change in best IC: 0 / Change in mean IC: -84.3826577419941
+
+After 80 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4409.61827998684
+Change in best IC: 0 / Change in mean IC: -35.9978437625477
+
+After 90 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4371.44474397303
+Change in best IC: 0 / Change in mean IC: -38.1735360138127
+
+After 100 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4340.66877617872
+Change in best IC: 0 / Change in mean IC: -30.7759677943122
+
+After 110 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4329.46757680741
+Change in best IC: 0 / Change in mean IC: -11.2011993713086
+
+After 120 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4291.56398472595
+Change in best IC: 0 / Change in mean IC: -37.9035920814613
+
+After 130 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4278.80029341758
+Change in best IC: 0 / Change in mean IC: -12.7636913083707
+
+After 140 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4267.90073335563
+Change in best IC: 0 / Change in mean IC: -10.8995600619464
+
+After 150 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4260.21922830903
+Change in best IC: 0 / Change in mean IC: -7.68150504659752
+
+After 160 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4253.02929979752
+Change in best IC: 0 / Change in mean IC: -7.1899285115087
+
+After 170 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4251.20725677344
+Change in best IC: 0 / Change in mean IC: -1.82204302408536
+
+After 180 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4243.59455014637
+Change in best IC: 0 / Change in mean IC: -7.61270662706465
+
+After 190 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4227.02354180698
+Change in best IC: 0 / Change in mean IC: -16.5710083393924
+
+After 200 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4219.12425266086
+Change in best IC: 0 / Change in mean IC: -7.89928914612665
+
+After 210 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4210.65508984968
+Change in best IC: 0 / Change in mean IC: -8.46916281117683
+
+After 220 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4207.28023469109
+Change in best IC: 0 / Change in mean IC: -3.37485515858589
+
+After 230 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4200.23645780857
+Change in best IC: 0 / Change in mean IC: -7.04377688252316
+
+After 240 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4194.61740184148
+Change in best IC: 0 / Change in mean IC: -5.61905596708493
+
+After 250 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4178.95098938371
+Change in best IC: 0 / Change in mean IC: -15.6664124577792
+
+After 260 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4173.96079877989
+Change in best IC: 0 / Change in mean IC: -4.99019060381579
+
+After 270 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4169.16364816414
+Change in best IC: 0 / Change in mean IC: -4.79715061575189
+
+After 280 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4168.90354550206
+Change in best IC: 0 / Change in mean IC: -0.26010266207777
+
+After 290 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4154.8610330328
+Change in best IC: 0 / Change in mean IC: -14.0425124692638
+
+After 300 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4154.8610330328
+Change in best IC: 0 / Change in mean IC: 0
+
+After 310 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4150.30528637526
+Change in best IC: 0 / Change in mean IC: -4.55574665753375
+
+After 320 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4150.30528637526
+Change in best IC: 0 / Change in mean IC: 0
+
+After 330 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4150.30528637526
+Change in best IC: 0 / Change in mean IC: 0
+
+After 340 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4145.57877115721
+Change in best IC: 0 / Change in mean IC: -4.72651521805255
+
+After 350 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4138.31642955602
+Change in best IC: 0 / Change in mean IC: -7.26234160119384
+
+After 360 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4128.76045456979
+Change in best IC: 0 / Change in mean IC: -9.5559749862241
+
+After 370 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4128.76045456979
+Change in best IC: 0 / Change in mean IC: 0
+
+After 380 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4124.25536329005
+Change in best IC: 0 / Change in mean IC: -4.50509127973874
+
+After 390 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4117.86437219006
+Change in best IC: 0 / Change in mean IC: -6.3909910999937
+
+After 400 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4117.86437219006
+Change in best IC: 0 / Change in mean IC: 0
+
+After 410 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4113.46311552438
+Change in best IC: 0 / Change in mean IC: -4.4012566656811
+
+After 420 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4113.15219142765
+Change in best IC: 0 / Change in mean IC: -0.31092409672965
+
+After 430 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4113.15219142765
+Change in best IC: 0 / Change in mean IC: 0
+
+After 440 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4113.15219142765
+Change in best IC: 0 / Change in mean IC: 0
+
+After 450 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4113.15219142765
+Change in best IC: 0 / Change in mean IC: 0
+
+After 460 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4112.04015610781
+Change in best IC: 0 / Change in mean IC: -1.11203531984302
+
+After 470 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4108.43894609793
+Change in best IC: 0 / Change in mean IC: -3.60121000987328
+
+After 480 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4108.43894609793
+Change in best IC: 0 / Change in mean IC: 0
+
+After 490 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4108.43894609793
+Change in best IC: 0 / Change in mean IC: 0
+
+After 500 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4108.02918438401
+Change in best IC: 0 / Change in mean IC: -0.409761713922308
+
+After 510 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4107.98409709029
+Change in best IC: 0 / Change in mean IC: -0.045087293720826
+
+After 520 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4107.98409709029
+Change in best IC: 0 / Change in mean IC: 0
+
+After 530 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4105.50602140217
+Change in best IC: 0 / Change in mean IC: -2.47807568812368
+
+After 540 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4104.31601036929
+Change in best IC: 0 / Change in mean IC: -1.19001103287701
+
+After 550 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4101.48223561829
+Change in best IC: 0 / Change in mean IC: -2.83377475100224
+
+After 560 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4101.48223561829
+Change in best IC: 0 / Change in mean IC: 0
+
+After 570 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4101.29540959337
+Change in best IC: 0 / Change in mean IC: -0.186826024913898
+
+After 580 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4100.54017159839
+Change in best IC: 0 / Change in mean IC: -0.755237994985691
+
+After 590 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4098.8520655171
+Change in best IC: 0 / Change in mean IC: -1.68810608128933
+
+After 600 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4098.8520655171
+Change in best IC: 0 / Change in mean IC: 0
+
+After 610 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4092.79516952723
+Change in best IC: 0 / Change in mean IC: -6.05689598986464
+
+After 620 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4092.79516952723
+Change in best IC: 0 / Change in mean IC: 0
+
+After 630 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4089.09426297391
+Change in best IC: 0 / Change in mean IC: -3.70090655332297
+
+After 640 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4088.21454936091
+Change in best IC: 0 / Change in mean IC: -0.879713613002423
+
+After 650 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4088.12384190639
+Change in best IC: 0 / Change in mean IC: -0.0907074545207252
+
+After 660 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4086.87330780097
+Change in best IC: 0 / Change in mean IC: -1.25053410541932
+
+After 670 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4086.81643262088
+Change in best IC: 0 / Change in mean IC: -0.0568751800888094
+
+After 680 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4086.81643262088
+Change in best IC: 0 / Change in mean IC: 0
+
+After 690 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4085.70494867314
+Change in best IC: 0 / Change in mean IC: -1.11148394773818
+
+After 700 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4085.46310135217
+Change in best IC: 0 / Change in mean IC: -0.241847320972283
+
+After 710 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4085.46310135217
+Change in best IC: 0 / Change in mean IC: 0
+
+After 720 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4085.46310135217
+Change in best IC: 0 / Change in mean IC: 0
+
+After 730 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4085.04289588569
+Change in best IC: 0 / Change in mean IC: -0.420205466478365
+
+After 740 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4085.04289588569
+Change in best IC: 0 / Change in mean IC: 0
+
+After 750 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4082.34621341037
+Change in best IC: 0 / Change in mean IC: -2.69668247531717
+
+After 760 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4082.34621341037
+Change in best IC: 0 / Change in mean IC: 0
+
+After 770 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4082.34621341037
+Change in best IC: 0 / Change in mean IC: 0
+
+After 780 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4082.34621341037
+Change in best IC: 0 / Change in mean IC: 0
+
+After 790 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4082.34621341037
+Change in best IC: 0 / Change in mean IC: 0
+
+After 800 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4081.27798277556
+Change in best IC: 0 / Change in mean IC: -1.06823063481443
+
+After 810 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4081.27798277556
+Change in best IC: 0 / Change in mean IC: 0
+
+After 820 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4080.2184859486
+Change in best IC: 0 / Change in mean IC: -1.05949682695837
+
+After 830 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4080.00172121588
+Change in best IC: 0 / Change in mean IC: -0.216764732721003
+
+After 840 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4080.00172121588
+Change in best IC: 0 / Change in mean IC: 0
+
+After 850 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4079.29910063547
+Change in best IC: 0 / Change in mean IC: -0.702620580410439
+
+After 860 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4079.29910063547
+Change in best IC: 0 / Change in mean IC: 0
+
+After 870 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4079.29910063547
+Change in best IC: 0 / Change in mean IC: 0
+
+After 880 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4079.27851079438
+Change in best IC: 0 / Change in mean IC: -0.0205898410927148
+
+After 890 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4079.27851079438
+Change in best IC: 0 / Change in mean IC: 0
+
+After 900 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4076.77834168379
+Change in best IC: 0 / Change in mean IC: -2.50016911058947
+
+After 910 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4076.77834168379
+Change in best IC: 0 / Change in mean IC: 0
+
+After 920 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4076.28125016992
+Change in best IC: 0 / Change in mean IC: -0.497091513867872
+
+After 930 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4076.28125016992
+Change in best IC: 0 / Change in mean IC: 0
+
+After 940 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4073.78480292395
+Change in best IC: 0 / Change in mean IC: -2.49644724596601
+
+After 950 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4073.78480292395
+Change in best IC: 0 / Change in mean IC: 0
+
+After 960 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4073.78480292395
+Change in best IC: 0 / Change in mean IC: 0
+
+After 970 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4073.78480292395
+Change in best IC: 0 / Change in mean IC: 0
+
+After 980 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4073.78480292395
+Change in best IC: 0 / Change in mean IC: 0
+
+After 990 generations:
+Best model: average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+plu__large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+plu__large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type
+Crit= 3934.8192794576
+Mean crit= 4073.78480292395
+Improvements in best and average IC have bebingo en below the specified goals.
+Algorithm is declared to have converged.
+Completed.
+
+
+> 

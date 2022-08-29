@@ -1,0 +1,770 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+---
+title: "Week 10 Day 5 - Homework"
+output: html_notebook
+---
+
+
+# Data Dictionary
+
+index
+Date: The date of the observation
+AveragePrice: the average price of a single avocado
+Total Volume: Total number of avocados sold
+4046: Total number of avocados with PLU 4046 sold
+4225: Total number of avocados with PLU 4225 sold
+4770: Total number of avocados with PLU 4770 sold
+Total Bags
+Small Bags
+Large Bags
+XLarge Bags
+type: conventional or organic
+year: the year
+region: the city or region of the observation
+
+
+#1 MVP
+We’ve looked at a few different ways in which we can build models this week, including how to prepare them properly. This weekend we’ll build a multiple linear regression model on a dataset which will need some preparation. The data can be found in the data folder, along with a data dictionary
+
+We want to investigate the avocado dataset, and, in particular, to model the AveragePrice of the avocados. Use the tools we’ve worked with this week in order to prepare your dataset and find appropriate predictors. Once you’ve built your model use the validation techniques discussed on Wednesday to evaluate it. Feel free to focus either on building an explanatory or a predictive model, or both if you are feeling energetic!
+
+As part of the MVP we want you not to just run the code but also have a go at interpreting the results and write your thinking in comments in your script.
+
+Hints and tips
+
+region may lead to many dummy variables. Think carefully about whether to include this variable or not (there is no one ‘right’ answer to this!)
+Think about whether each variable is categorical or numerical. If categorical, make sure that the variable is represented as a factor.
+We will not treat this data as a time series, so Date will not be needed in your models, but can you extract any useful features out of Date before you discard it?
+If you want to build a predictive model, consider using either leaps or glmulti to help with this.
+
+```{r}
+library(tidyverse)
+library(GGally)
+library(ggfortify)
+library(lubridate)
+library(modelr)
+```
+
+
+```{r}
+avocado <- read_csv(here::here("avocado.csv")) %>% 
+  janitor::clean_names()
+```
+
+# Data Exploration
+
+```{r}
+skimr::skim(avocado)
+```
+```{r}
+head(avocado, 5)
+```
+```{r}
+avocado %>% 
+  ggplot(aes(average_price)) +
+  geom_histogram()
+```
+
+
+Average price looks as if it right skewed and so taking a logarithmic could
+help to create a slighly more normalised data set.
+
+```{r}
+avocado %>% 
+  ggplot(aes(x = log(average_price))) +
+  geom_histogram()
+```
+
+
+
+Check for the unique values in each
+```{r}
+avocado %>% 
+  summarise(across(everything(), .fns = ~length(unique(.x))))
+```
+
+```{r}
+avocado %>% 
+  mutate(across(.fns = ~replace(., duplicated(.), NA)))
+```
+
+
+Check to see if there are aliases within the data set.
+
+```{r}
+alias(average_price ~ ., data = avocado)
+```
+
+Whilst this did no appear in the above. Total bags is the summation of small, 
+large and xl bags and so will be removed from the data set.
+
+```{r}
+avocado %>% 
+  mutate(check = total_bags - small_bags - large_bags - x_large_bags) %>% 
+  slice_max(check,n=5)
+```
+
+```{r}
+# Does not appear that total volume is related to the x4* numbers
+avocado %>% 
+  mutate(check = total_volume - x4046 - x4225 - x4770) %>% 
+  select(check, total_volume, contains("x4"))
+```
+
+
+```{r}
+avocado %>% 
+  distinct(region)
+```
+
+```{r}
+avocado %>% 
+  distinct(type)
+```
+
+
+# Data Engineering
+
+```{r}
+avocado_tidy <- avocado %>% 
+  mutate(month = month(date, label = TRUE),
+         year = as.factor(year)) %>% 
+  select(-c(x1,date, total_bags, region)) %>% 
+  rename_with(~str_replace(.x, "x4", "plu_4"))
+```
+
+## Split in to training and validation
+
+```{r}
+test_index <- sample(1:nrow(avocado_tidy), size = nrow(avocado_tidy)*0.1)
+
+avocado_train <- slice(avocado_tidy, -test_index)
+avocado_test <- slice(avocado_tidy, test_index)
+```
+
+
+# Manual Model Creation
+Function for easier plots later:
+
+```{r}
+ggpairs_plots <- function(data, main_columns){
+  data %>% 
+    select(where(is.numeric), main_columns, type) %>% 
+    ggpairs(aes(colour = type), progress = FALSE) %>% 
+    print()
+  
+  data %>% 
+    select(-where(is.numeric), main_columns ,type) %>% 
+    ggpairs(aes(colour = type), progress = FALSE) %>% 
+    print()
+}
+```
+
+
+Review the correlation of variables. From the initial look, there does not appear
+to be any clear correlation between average price and any of the other variables
+
+```{r}
+avocado_train %>% 
+  ggcorr(label = TRUE)
+
+avocado_train %>% 
+  filter(type == "organic") %>% 
+  ggcorr(label = TRUE)
+
+avocado_train %>% 
+  filter(type != "organic") %>%
+  ggcorr(label = TRUE)
+```
+
+
+
+
+```{r message=FALSE}
+avocado_train %>% 
+  ggpairs_plots(c("average_price"))
+```
+
+
+
+## Model 1
+
+From the ggpairs plots the type has a large effect on the average price. The
+month also has an affect
+
+### Type
+
+```{r}
+model_1_type <- lm(average_price ~ type,
+                   data = avocado_train)
+
+summary(model_1_type)
+autoplot(model_1_type)
+```
+
+```{r}
+model_1_type_log <- lm(log(average_price) ~ type,
+                   data = avocado_train)
+
+summary(model_1_type_log)
+autoplot(model_1_type_log)
+```
+
+
+#### Discussion
+The model with type seems to be statistically significant. The organic type
+will increase the average price by 0.495.
+
+
+### total_volume
+```{r}
+model_1_tot_vol <- lm(average_price ~ total_volume,
+                   data = avocado_train)
+
+summary(model_1_tot_vol)
+autoplot(model_1_tot_vol)
+```
+
+
+#### Discussion
+Whilst the values are significant the r2 is lower than the type. There is also
+a large deviation in the residuals. The first group is no around 0, where the
+second group is mainly over presidcted.
+
+
+### plu 4046
+
+```{r}
+model_1_plu4046 <- lm(average_price ~ plu_4046,
+                   data = avocado_train)
+
+summary(model_1_tot_vol)
+autoplot(model_1_tot_vol)
+```
+
+
+#### Discussion
+As per the total volume, the there is siginificance of plu_4046 bein in the model
+however, the r2 is currently low. Thereofre this will not be accepted at this time
+since the reidual plots are not acceptable.
+
+
+> Model 1 champion = type
+
+
+## Model 2
+
+```{r}
+avocado_train %>% 
+  add_residuals(model_1_type) %>% 
+  ggpairs_plots(c("average_price","resid"))
+
+```
+
+
+
+
+
+```{r}
+model_1_type <- lm(average_price ~ type,
+                   data = avocado_train)
+
+summary(model_1_type)
+autoplot(model_1_type)
+```
+
+```{r}
+avocado_train %>% 
+  add_residuals(model_1_type) %>% 
+  ggcorr(label = TRUE)
+```
+
+### month
+
+```{r}
+model_2_month <- lm(average_price ~ type + month,
+                   data = avocado_train)
+summary(model_2_month)
+autoplot(model_2_month)
+```
+```{r}
+anova(model_1_type, model_2_month)
+```
+
+
+```{r}
+avocado_train %>% 
+  distinct(month) %>% 
+  pull()
+```
+
+
+#### Discussion
+The month has an increase in the r2 by about 5%. The residuals are still distributed
+around 0. However there is a slight increase in the trend of the residuals
+compared to the baseline model. Not all of the months have are significant
+however using anova, the overall inclusion of month is significant.
+
+### year
+
+```{r}
+model_2_year <- lm(average_price ~ type + year,
+                   data = avocado_train)
+summary(model_2_year)
+autoplot(model_2_year)
+```
+#### Disussion
+
+### total_volume
+
+
+```{r}
+model_2_total_volume <- lm(average_price ~ type + total_volume,
+                   data = avocado_train)
+summary(model_2_total_volume)
+autoplot(model_2_total_volume)
+```
+
+### Discussion
+The total volume provides some addition to the r2 however the effect is smaller
+than year and month. The addition is statistically
+significant based on the p-value. The total volume is decrease the cost by
+-6e9 for a unit volume when the type is kept constant.
+
+> Champion model is month
+
+```{r}
+ggpairs_plots <- function(data, main_columns, remove_columns = "pleasenothing"){
+  data %>% 
+    select(-any_of(remove_columns),  where(is.numeric), any_of(main_columns)) %>% 
+    ggpairs(aes(colour = type), progress = FALSE) %>%
+    print()
+
+  data %>%
+    select(-any_of(remove_columns), -where(is.numeric), any_of(main_columns)) %>%
+    ggpairs(aes(colour = type), progress = FALSE) %>%
+    print()
+}
+```
+
+
+## Model 3
+
+```{r message = FALSE}
+avocado_train %>% 
+  add_residuals(model_2_month) %>% 
+  ggpairs_plots(main_columns = c("resid", "type"), remove_columns = c("month"))
+
+```
+
+
+### year
+
+```{r}
+model_3_year <- lm(average_price ~ type + month + year,
+                   data = avocado_train)
+
+summary(model_3_year)
+autoplot(model_3_year)
+anova(model_2_month, model_3_year)
+```
+
+#### Discussion
+
+The addition of year does not impact the residual plots with the values still
+distributed around 0. There is still a small increase in the standadrdised 
+residuals but this is small. The normal curve for the residuals is slightly 
+right skewed.
+All of the years are shown to be of significance with an increase in the r2.
+
+
+### total_volume
+```{r}
+model_3_tot_vol <- lm(average_price ~ type + month + total_volume,
+                   data = avocado_train)
+
+summary(model_3_tot_vol)
+autoplot(model_3_tot_vol)
+```
+
+#### Discussion
+The total volume is again is shown to have residuals around 0 wiith a small change
+over the fitted values. The residuals are slightly right skewed.
+The p-value shows this variable is still significant 
+
+
+### plu_4
+```{r}
+model_3_plu4046 <- lm(average_price ~ type + month + plu_4046,
+                   data = avocado_train)
+
+summary(model_3_plu4046)
+autoplot(model_3_plu4046)
+```
+
+#### Discussion
+Results are similar to the total_volume for the residuals.
+The r2 is slightly higher than the total_volume.
+
+
+> champion is year
+
+## Model 4
+
+```{r}
+avocado_train %>% 
+  add_residuals(model_3_year) %>% 
+  ggpairs_plots(main_columns = c("resid", "type"), remove_columns = c("month", "year"))
+```
+```{r}
+avocado_train %>% 
+  add_residuals(model_3_year) %>% 
+  ggcorr(label = TRUE)
+```
+
+
+
+### plu_4046
+```{r}
+model_4_plu4046 <- lm(average_price ~ type + month + year + log(plu_4046),
+                   data = avocado_train)
+
+summary(model_4_plu4046)
+autoplot(model_4_plu4046)
+```
+
+#### Discussion
+With plu 4046, the residuals are evenly distributed, the slighy
+
+```{r}
+avocado_train %>% 
+  ggplot(aes(x = (plu_4046))) +
+  geom_histogram(bins = 40)
+```
+
+
+### total_volume
+```{r}
+model_4_tot_vol <- lm(average_price ~ type + month + year + total_volume,
+                   data = avocado_train)
+
+summary(model_4_tot_vol)
+autoplot(model_4_tot_vol)
+```
+
+```{r}
+avocado_train %>% 
+  ggplot(aes(x = log(total_volume))) +
+  geom_histogram(bins = 40)
+```
+
+
+
+```{r}
+model_4_tot_vol_log <- lm(average_price ~ type + month + year + log(total_volume),
+                   data = avocado_train)
+
+summary(model_4_tot_vol_log)
+autoplot(model_4_tot_vol_log)
+```
+
+```{r}
+model_4_tot_vol_log <- lm(average_price ~ type + month + year + log(total_volume),
+                   data = avocado_train)
+
+summary(model_4_tot_vol_log)
+autoplot(model_4_tot_vol_log)
+```
+
+#### Discussion
+Taking the logarithmic has helped to distribute the residuals and has provided
+a better correlation. The Q-Q plot still has a similar result to the baseline
+value.
+
+
+
+
+```{r}
+model_4_plu4225 <- lm(average_price^0.5 ~ type + month + year + plu_4225,
+                   data = avocado_train)
+
+summary(model_4_plu4225)
+autoplot(model_4_plu4225)
+```
+
+
+> Will use log(total_volume)
+
+## Model 5
+
+```{r}
+avocado_train %>% 
+  add_residuals(model_4_tot_vol_log) %>% 
+  ggpairs_plots(main_columns = c("resid", "type"), 
+                remove_columns = c("month", "year", "total_volume"))
+```
+
+```{r}
+avocado_train %>% 
+  add_residuals(model_4_tot_vol_log) %>% 
+  ggcorr(label = TRUE)
+
+avocado_train %>% 
+  filter(type == "organic") %>% 
+  add_residuals(model_4_tot_vol_log) %>% 
+  ggcorr(label = TRUE)
+
+avocado_train %>% 
+  filter(type != "organic") %>% 
+  add_residuals(model_4_tot_vol_log) %>% 
+  ggcorr(label = TRUE)
+```
+
+
+The correlation for all of the variables left with the residuals is still 
+very small.
+
+#### plu4225
+
+```{r}
+model_5_plu4225 <- lm(average_price ~ type + month + year + log(total_volume) +
+                        plu_4225,
+                   data = avocado_train)
+
+summary(model_5_plu4225)
+autoplot(model_5_plu4225)
+```
+
+#### Discussion
+The inclusion of plu_4225 does not affect the residual plots but does slightly 
+increase the r2 value. The p-value is significant.
+
+
+
+### plu_4770
+
+```{r}
+model_5_plu4770 <- lm(average_price ~ type + month + year + log(total_volume) +
+                        plu_4770,
+                   data = avocado_train)
+
+summary(model_5_plu4770)
+autoplot(model_5_plu4770)
+```
+
+
+#### Discussion
+Again there is limited change to the residual plots and is therefore acceptable.
+The r2 does increase however not as much as plu_40225.
+
+
+
+> Will use plu_40225
+
+
+## Model 6
+```{r}
+avocado_train %>% 
+  add_residuals(model_5_plu4225) %>% 
+  ggpairs_plots(main_columns = c("resid", "type"), 
+                remove_columns = c("month", "year", "total_volume", "plu_4225"))
+```
+
+
+### interaction with total_volume
+
+```{r}
+coplot(resid ~ log(total_volume) | month,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = avocado_train %>% add_residuals(model_4_tot_vol_log), rows = 1)
+```
+
+
+
+```{r}
+coplot(resid ~ log(total_volume) | year,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = avocado_train %>% add_residuals(model_4_tot_vol_log), rows = 1)
+```
+
+
+
+
+```{r}
+coplot(resid ~ log(total_volume) | type,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = avocado_train %>% add_residuals(model_4_tot_vol_log), rows = 1)
+
+```
+
+```{r}
+coplot(resid ~ log(total_volume) | plu_4225,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = avocado_train %>% add_residuals(model_4_tot_vol_log), rows = 1)
+
+```
+
+#### Discussion
+The interactions between most seem minor. The most effected appear to be
+year and plu_4225
+
+### Interactions with plu_4225
+
+```{r}
+coplot(resid ~ plu_4225 | month,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = avocado_train %>% add_residuals(model_4_tot_vol_log), rows = 1)
+```
+
+
+
+```{r}
+coplot(resid ~ plu_4225 | year,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = avocado_train %>% add_residuals(model_4_tot_vol_log), rows = 1)
+```
+
+
+
+
+```{r}
+coplot(resid ~ plu_4225 | type,
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = avocado_train %>% add_residuals(model_4_tot_vol_log), rows = 1)
+
+```
+
+```{r}
+coplot(resid ~ plu_4225 | log(total_volume),
+       panel = function(x, y, ...){
+         points(x, y)
+         abline(lm(y ~ x), col = "blue")
+       },
+       data = avocado_train %>% add_residuals(model_4_tot_vol_log), rows = 1)
+
+```
+
+#### Discussion
+From the plots, the interaction between total volume and plu_4225 has the 
+largest impact.
+
+
+```{r}
+model_6_vol_4225 <- lm(average_price ~ type + month + year + log(total_volume) +
+                        plu_4225 + log(total_volume):plu_4225,
+                       data = avocado_train)
+
+summary(model_6_vol_4225)
+autoplot(model_6_vol_4225)
+```
+
+
+
+```{r}
+model_6_vol_month <- lm(average_price ~ type + month + year + log(total_volume) +
+                        plu_4225 + log(total_volume):month,
+                       data = avocado_train)
+
+summary(model_6_vol_month)
+autoplot(model_6_vol_month)
+```
+
+
+```{r}
+model_6_4225_year <- lm(average_price ~ type + month + year + log(total_volume) +
+                        plu_4225 + plu_4225:year,
+                       data = avocado_train)
+
+summary(model_6_4225_year)
+autoplot(model_6_4225_year)
+```
+
+From the plots, again there is minimal change with the inclusion of this
+interaction. The interaction of plu_4225 and tota_volume does appear to be
+statistically significant.
+
+> Interaction between plu_4225 and total_volume will be added.
+
+
+# Model review
+
+```{r}
+relaimpo::calc.relimp(model_6_vol_4225, type = "lmg", rela = TRUE)
+```
+
+
+
+```{r}
+broom::glance(model_6_vol_4225)
+```
+
+
+
+```{r}
+predictions_test <- avocado_test %>% 
+  add_predictions(model_6_vol_4225) %>% 
+  select(average_price, pred)
+```
+
+
+```{r}
+  mean((predictions_test$pred - avocado_test$average_price)^2)
+```
+
+```{r}
+glmulti_model <- lm(average_price~1+year+month+total_volume+plu_4046+plu_4225+plu_4770+small_bags+large_bags+x_large_bags+type+month:year+plu_4225:plu_4046+large_bags:total_volume+large_bags:plu_4225+x_large_bags:small_bags+type:total_volume+type:plu_4046+type:plu_4225+type:plu_4770+type:small_bags+type:large_bags+year:plu_4225+year:small_bags+year:type,
+                    data = avocado_train)
+```
+
+```{r}
+broom::glance(glmulti_model)
+```
+
+
+```{r}
+glmulti_pred <- avocado_test %>%  
+  add_predictions(glmulti_model)
+```
+
+```{r}
+mean((glmulti_pred$pred - avocado_test$average_price)^2)
+```
+
+
+### Summary
+The values found using the glmulti has a lower AIC and BIC but a higher r2
+value. Therefore for the test set this this a more valuable model.
+The final manual model will decrease the the value by 0.0734 per 1 unit of 
+log(total_val) when all other variables are constant. The plu_4225 will increase
+by 1e-6 for every unit change when all other variables are constant.
+The interaction will have a decrease in the gradient by -5.89e-8 with
+interactions between plu_4225 and total_volume.
+
+```{r}
+summary(model_6_vol_4225)
+```
+
