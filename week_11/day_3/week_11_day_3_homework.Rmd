@@ -1,0 +1,213 @@
+---
+title: "Week 11- Day 3 - Clustering"
+output: html_notebook
+---
+
+# Load in libraries
+```{r}
+library(tidyverse)
+library(cluster)
+library(factoextra)
+library(dendextend)
+library(broom)
+library(GGally)
+```
+
+
+Clustering homework
+You have been provided some customer data from a shopping centre. Do some exploratory analysis on the data. Comment on findings.
+
+
+
+```{r}
+mall_customer <- read_csv(here::here("data/mall_customers.csv")) %>% 
+  rename_with(.fn = ~str_replace(.,"\\(.*", "")) %>% 
+  janitor::clean_names()
+```
+
+```{r}
+skimr::skim(mall_customer)
+```
+## Thoughts
+Standardise the variables and remove the customer id column
+
+## Code
+```{r}
+mall_scale <- mall_customer %>% 
+  select(-c(customer_id)) %>% 
+  mutate(across(where(is.numeric), .fns = scale),
+         gender = if_else(gender == "Male", 1, 0))
+```
+
+```{r}
+mall_scale_no_gender <- mall_customer %>% 
+  select(-c(customer_id, gender)) %>% 
+  mutate(across(where(is.numeric), .fns = scale))
+```
+
+
+
+
+```{r}
+# Quick check for standardisation
+mall_scale %>% 
+  select(where(is.numeric)) %>% 
+  summarise(across(.fns = list(mean = mean,
+                                      sd = sd)))
+
+```
+
+
+```{r}
+mall_scale %>% 
+  summarise(across(.fns = ~sum(is.na(.x))))
+```
+
+
+
+
+```{r}
+mall_scale %>% 
+  ggpairs()
+```
+
+
+
+
+
+We are interested in creating a marketing campaign to target customers based on their spending score and annual income. Perform a k-means clustering to find if there are meaningful clusters in the data to target the customers.
+
+
+```{r}
+max_k <- 20
+
+k_clusters <- tibble(k = 1:max_k) %>%
+  mutate(
+    kclust = map(k, ~ kmeans(mall_scale, .x, nstart = 25)), # created k-cluster object in each row
+    tidied = map(kclust, tidy),
+    glanced = map(kclust, glance),
+    augmented = map(kclust, augment, mall_customer)
+  )
+```
+
+```{r}
+clusterings <- k_clusters %>% 
+  unnest(glanced)
+
+
+clusterings %>% 
+  ggplot(aes(k, tot.withinss)) +
+  geom_line() +
+  geom_point() +
+  scale_x_continuous(breaks = 1:max_k)
+```
+
+```{r}
+# Elbow/Silhouette of mall with gender 
+fviz_nbclust(mall_scale, kmeans, method = "wss", nstart = 25)
+fviz_nbclust(mall_scale, kmeans, method = "silhouette", nstart = 25)
+fviz_nbclust(mall_scale, kmeans, method = "gap_stat", nstart = 25)
+```
+
+
+```{r}
+# Elbow /slihouette of mall no gender
+fviz_nbclust(mall_scale_no_gender, kmeans, method = "wss", nstart = 25)
+fviz_nbclust(mall_scale_no_gender, kmeans, method = "silhouette", nstart = 25)
+fviz_nbclust(mall_scale_no_gender, kmeans, method = "gap_stat", nstart = 25)
+```
+
+## Discussion
+FOr the clusterning with the gender field (1 = male and 0 = female), the 
+elbow and silhouette plots are similar. However for the gap plot, they are 
+different. Due the variation 2 and 6 cluster recommendations, the value of 
+4 will be used.
+
+
+Perform k-means clustering and chose a value of k.
+
+```{r}
+cluster_with_gender <- mall_scale %>% 
+  kmeans(centers = 6, nstart = 25)
+
+cluster_with_no_gender <- mall_scale_no_gender %>% 
+  kmeans(centers = 6, nstart = 25)
+```
+
+```{r}
+mall_gender <- augment(cluster_with_gender, mall_customer)
+mall_no_gender <- augment(cluster_with_no_gender, mall_customer)
+```
+
+
+
+
+Visualise the clustering for your chosen value of k.
+
+```{r}
+mall_gender %>% 
+  ggpairs(column = 2:5, progress = FALSE, 
+          mapping = aes(colour = .cluster), legend = 1)
+```
+
+```{r}
+mall_no_gender %>% 
+  ggpairs(column = 3:5, progress = FALSE,
+          aes(colour = .cluster), legend = 1)
+```
+
+
+Do you think the clustering seems a good fit for this data?
+
+Since we obtained different values of recommendation of clusters, this
+may not be the best for k-means. However the recommended clusters of
+6 with no gender could indicate otherwise.
+The visualisations, do however indicate that ethere could be some overlap
+on one of the planes (for example annual income vs spending for clusters
+2 and 5). 
+This is again shown in the means of the data where there are some values which
+overlap.
+The annual income vs spending shown better "group" for data
+compared to the age which can have larger ranges. Which may make this less
+suitable.
+
+```{r}
+mall_no_gender %>% 
+  group_by(.cluster) %>% 
+  summarise(across(where(is.numeric), .fns = mean),
+            perc_male = 100*sum(gender == "Male")/n(),
+            num_female = 100*sum(gender == "Female")/n(),
+            perc_data = 100*n()/nrow(.)) %>% 
+  select(-customer_id)
+
+```
+```{r}
+mall_gender %>% 
+  group_by(.cluster) %>% 
+  summarise(age_range = paste(min(age), "to", max(age)),
+            across(where(is.numeric), .fns = mean),
+            perc_male = 100*sum(gender == "Male")/n(),
+            perc_female = 100*sum(gender == "Female")/n(),
+            perc_data = 100*n()/nrow(.)) %>% 
+  select(-customer_id)
+```
+
+
+```{r}
+bind_rows("has_gender" = glance(cluster_with_gender),
+          "no_gender" = glance(cluster_with_no_gender))
+```
+
+
+
+Comment on the attributes on one or two of the clusters (maybe even give them a label if you like - like in section 4.1 of the ‘Segmentation & clustering intro’ lesson).
+
+Using gender-
+CLuster 1 - Is 11.5% in data set. has 43.5% male/56.5% female.
+            mean age is 25 with an income of 25k and high spending score of
+            77.
+Cluster 6 - Is 10.5 % of population, has 38% males and 62% female,
+            mean age is 46 with a annumal income of 26 but much lower score of
+            19.
+
+
