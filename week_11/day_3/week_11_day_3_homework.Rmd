@@ -35,8 +35,8 @@ Standardise the variables and remove the customer id column
 ```{r}
 mall_scale <- mall_customer %>% 
   select(-c(customer_id)) %>% 
-  mutate(across(where(is.numeric), .fns = scale),
-         gender = if_else(gender == "Male", 1, 0))
+  mutate(gender = if_else(gender == "Male", 1, 0),
+         across(where(is.numeric), .fns = scale))
 ```
 
 ```{r}
@@ -174,7 +174,8 @@ suitable.
 ```{r}
 mall_no_gender %>% 
   group_by(.cluster) %>% 
-  summarise(across(where(is.numeric), .fns = mean),
+  summarise(age_range = paste(min(age), "to", max(age)),
+            across(where(is.numeric), .fns = mean),
             perc_male = 100*sum(gender == "Male")/n(),
             num_female = 100*sum(gender == "Female")/n(),
             perc_data = 100*n()/nrow(.)) %>% 
