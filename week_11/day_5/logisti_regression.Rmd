@@ -1,0 +1,338 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+# Load in data
+```{r}
+library(tidyverse)
+library(GGally)
+library(modelr)
+library(glmulti)
+```
+
+
+```{r}
+orange_juice <- read_csv(here::here("data/orange_juice.csv")) %>% 
+  janitor::clean_names()
+```
+```{r}
+skimr::skim(orange_juice)
+```
+
+You have been provided with a set of data on customer purchases of either ‘Citrus Hill’ (purchase = 'CH') or ‘Minute Maid’ (purchase = 'MM') orange juice, together with some further attributes of both the customer and the store of purchase. A data dictionary is also provided in the data directory.
+
+We would like you to build the best predictive classifier you can of whether a customer is likely to buy Citrus Hill or Minute Maid juice. Use logistic regression to do this. You should use either train-test splitting or cross-validation to evaluate your classifier. The metric for ‘best classifier’ will be highest AUC value either in the test set (for train-test splitting) or from cross-validation.
+
+
+
+
+```{r}
+orange_juice
+```
+# Data Exploration
+
+Purchase -Levels CH and MM indicating whether the customer purchased Citrus Hill or Minute Maid Orange Juice
+WeekofPurchase - Week of purchase
+StoreID - Store ID
+PriceCH - Price charged for CH
+PriceMM - Price charged for MM
+DiscCH - Discount offered for CH
+DiscMM - Discount offered for MM
+SpecialCH - Indicator of special on CH
+SpecialMM - Indicator of special on MM
+LoyalCH - Customer brand loyalty for CH
+SalePriceMM - Sale price for MM
+SalePriceCH - Sale price for CH
+PriceDiff - Sale price of MM less sale price of CH
+Store7 - A factor with levels No and Yes indicating whether the sale is at Store 7
+PctDiscMM - Percentage discount for MM
+PctDiscCH - Percentage discount for CH
+ListPriceDiff - List price of MM less list price of CH
+STORE - Which of 5 possible stores the sale occured at
+
+
+
+Get all of the non duplicate values (note the table goes out of order)
+```{r}
+orange_juice %>% 
+  mutate(across(.fns = ~replace(., duplicated(.), NA))) %>% 
+  map(~ .x %>% 
+            as_tibble %>%
+            arrange(desc(value))) %>%
+     bind_cols %>%
+     set_names(names(orange_juice))
+```
+
+# Modify data
+
+```{r}
+orange_juice_clean <- orange_juice %>% 
+  mutate(purchase_mm = as.factor(if_else(purchase == "MM", 1 ,0))) %>% 
+  select(-c(purchase, store7, store_id, sale_price_ch, sale_price_mm, list_price_diff, price_diff)) %>% 
+  mutate(across(where(is.character) | contains(c("store", "special")), .fns = as.factor))
+```
+
+```{r}
+alias(purchase_mm ~ ., orange_juice_clean)
+```
+
+Remove Store_id, store7, sale_price_mm, sale_price_ch and price_diff, list_price_diff
+as they are aliases.
+
+Week of purchase has been left as a numeric value at the moment
+
+
+
+# Test/train
+
+Split data into test and train
+```{r}
+# Create the index for samples
+sample_index <- sample(1:nrow(orange_juice_clean), 0.3 * nrow(orange_juice_clean))
+
+# Create the test set
+test_orange <- slice(orange_juice_clean, sample_index)
+
+# Create the training set
+train_orange <- slice(orange_juice_clean, -sample_index)
+```
+
+```{r}
+train_orange %>% 
+  summarise(across(where(is.numeric), .fns = sd))
+```
+
+
+
+
+```{r message=FALSE}
+ggpairs(train_orange, progress = FALSE)
+```
+
+## Thoughts
+
+Some components do still have a high correlation i.e. discount for ch and mm.
+Variables which look as if they will be used in the model:
+
+* loyal_ch
+* price_mm
+* store
+
+
+# Create model
+
+```{r}
+test_glmulti <- glmulti(
+  purchase_mm ~ ., 
+  data = train_orange,
+  level = 1,               # No interactions considered, main effects only
+  method = "d",            # Exhaustive approach
+  crit = "bic",            # BIC as criteria
+  confsetsize = 10,        # Keep 10 best models
+  plotty = F, 
+  report = T,              # No plots, but provide interim reports
+  fitfunction = "glm",     # glm function
+  family = binomial(link = "logit"))
+```
+
+Due to the number of models being small, the use if no limitations and an 
+exhaustive approach will be completed.
+
+
+```{r}
+tictoc::tic()
+glmulti_search_all_mains <- glmulti(
+  purchase_mm ~ ., 
+  data = train_orange,
+  level = 1,               # No interactions considered, main effects only
+  method = "h",            # Exhaustive approach
+  crit = "bic",            # BIC as criteria
+  confsetsize = 10,        # Keep 10 best models
+  plotty = F, 
+  report = T,              # No plots, but provide interim reports
+  fitfunction = "glm",     # glm function
+  family = binomial(link = "logit")) # binomial family for logistic regression
+
+tictoc::toc()
+summary(glmulti_search_all_mains)
+```
+
+```{r}
+summary(glmulti_search_all_mains)$bestmodel
+```
+
+The glmulti has created the following model function:
+"purchase_mm ~ 1 + price_mm + disc_mm + loyal_ch + store"
+
+
+```{r}
+weightable(glmulti_search_all_mains)
+```
+
+```{r}
+tictoc::tic()
+glmulti_search_all_with_pairs <- glmulti(
+  summary(glmulti_search_all_mains)$bestmodel,
+  data = train_orange,
+  level = 2,               # Interactions considered
+  method = "h",            # Exhaustive approach
+  crit = "bic",            # BIC as criteria
+  confsetsize = 10,        # Keep 10 best models
+  marginality = TRUE,      # consider pairs only if both main effects in model
+  minsize = 6,             # minsize, maxsize and marginality here force 
+  maxsize = -1,             # inclusion of a single pair beyond the five main effects
+  plotty = F, 
+  report = T,              # No plots, but provide interim reports
+  fitfunction = "glm",     # glm function
+  family = binomial(link = "logit")) # binomial family for logistic regression
+
+tictoc::toc()
+summary(glmulti_search_all_with_pairs)
+```
+
+From the glmulit the best model is
+purchase_mm~1+price_mm+disc_mm+loyal_ch+store+disc_mm:price_mm+store:disc_mm
+
+```{r}
+summary(glmulti_search_all_with_pairs)
+```
+
+## K-fold cross validation
+```{r}
+library(caret)
+```
+```{r}
+weightable(glmulti_search_all_with_pairs)[1,1]
+```
+
+```{r}
+glmulti_search_all_with_pairs@formulas[1]
+```
+
+```{r}
+glmulti_search_all_mains@formulas[1]
+```
+
+
+```{r}
+k_fold <- trainControl(method = "cv",
+                       number = 10,
+                       savePredictions = TRUE)
+
+k_fold_model <- train(purchase_mm ~ 1 + price_mm + disc_mm + loyal_ch + store + disc_mm:price_mm + 
+                        store:disc_mm,
+                      data = train_orange,
+                      trControl = k_fold,
+                      method = "glm")
+
+# Complete this for the original gmulti model
+k_fold_gmulti1 <- train(purchase_mm ~ 1 + price_mm + disc_mm + loyal_ch + store,
+                      data = train_orange,
+                      trControl = k_fold,
+                      method = "glm")
+```
+
+```{r}
+summary(k_fold_model)
+```
+The disc_mm is no significant and could be excluded. The interaction between
+store and disc_mm is also not greatly significant. Therefore there is potential
+that the model could exclude these variables.
+
+
+```{r}
+summary(k_fold_gmulti1)
+```
+
+When using the values without the interactions, all of the variables tend to be
+more significant. The AIC does increase however with the additions of the
+interactions.
+
+
+
+```{r}
+multi_mod_1 <- glm(purchase_mm ~ 1 + price_mm + disc_mm + loyal_ch + store,
+            data = train_orange,
+            family = binomial(link = "logit"))
+
+multi_mod_2 <- glm(purchase_mm ~ 1 + price_mm + disc_mm + loyal_ch + store + disc_mm:price_mm + 
+                        store:disc_mm,
+            data = train_orange,
+            family = binomial(link = "logit"))
+```
+
+
+
+## RoC
+```{r}
+library(pROC)
+```
+
+```{r}
+roc_obj_1 <- train_orange %>%
+  add_predictions(multi_mod_1, type = "link") %>% 
+  roc(response = purchase_mm, predictor = pred)
+
+roc_obj_2 <- train_orange %>%
+  add_predictions(multi_mod_2, type = "link") %>% 
+  roc(response = purchase_mm, predictor = pred)
+  
+```
+
+
+```{r}
+ggroc(
+  data = list(roc_obj_1,
+              roc_obj_2),
+  legacy.axes = TRUE
+)
+```
+
+
+```{r}
+auc(roc_obj_1)
+auc(roc_obj_2)
+```
+
+From the plots and the AUC, the better model would be to include the interactions.
+However the difference is still relatively small and could be reduced if the 
+model created compuational difficulties. Due to the small number of variables,
+and a lower AIC, it is not expected that the glmulti has overfitted.
+
+
+# Add predictions
+
+Add predictions to test set
+
+
+```{r}
+orange_predict <- test_orange %>% 
+  add_predictions(k_fold_model)
+
+orange_predict_original <- test_orange %>% 
+  add_predictions(k_fold_gmulti1)
+
+```
+
+```{r}
+confusionMatrix(orange_predict$pred, orange_predict$purchase_mm)
+
+confusionMatrix(orange_predict_original$pred, orange_predict_original$purchase_mm)
+```
+
+
+```{r}
+library(broom)
+glance(k_fold_model$finalModel)
+glance(k_fold_gmulti1$finalModel)
+```
+
+
+## Thoughts
+
+The model shows a good sensitivity meaning that the number of true positives
+to false negatives is good. The specificity is however not as accurate and
+is therefore likely to provide more false positives. In this case, the model
+is more likely to predict CH is the one to buy than MM.
